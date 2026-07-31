@@ -11,9 +11,6 @@
 <header class="topbar">
 
 <img src="assets/logo.svg" class="logo-img" alt="Snap X">
-<span class="camera">📷</span>
-<span class="snap">Snap</span>
-<span class="x">X</span>
 </div>
 <button id="themeToggle">🌙</button>
 <a href="profile.html" class="profile-icon">👤</a>
@@ -84,7 +81,9 @@
 
 <a href="search.html">🔍</a>
 
-<a href="#">➕</a>
+<button class="floating-btn" id="postBtn">
+＋
+</button>
 
 <a href="notifications.html">🔔</a>
 
@@ -93,6 +92,32 @@
 <a href="profile.html">👤</a>
 
 </nav>
+
+<script type="module">
+
+import {
+createPost
+}
+from "../firebase/posts.js";
+
+
+document
+.getElementById("postBtn")
+.onclick=()=>{
+
+let text=
+prompt("What's on your mind?");
+
+
+if(text){
+
+createPost(text);
+
+}
+
+};
+
+</script>
 
 </body>
 </html>
