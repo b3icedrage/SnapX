@@ -33,7 +33,9 @@
 
 </section>
 
-<a class="floating-btn" href="#">＋</a>
+<button class="floating-btn" id="postBtn">
+＋
+</button>
 
 <nav class="bottom-nav">
 
@@ -79,5 +81,61 @@ createPost(text);
 
 </script>
 <script type="module" src="../firebase/feed.js"></script>
+
+<script type="module">
+
+import {
+uploadMedia
+}
+from "../supabase/upload.js";
+
+
+document
+.getElementById("postBtn")
+.onclick=()=>{
+
+
+let input=
+document.createElement("input");
+
+
+input.type="file";
+
+input.accept=
+"image/*,video/*";
+
+
+input.onchange=
+async()=>{
+
+
+let file=input.files[0];
+
+
+let url=
+await uploadMedia(file);
+
+
+console.log(
+"Uploaded:",
+url
+);
+
+
+alert(
+"Media uploaded 🚀"
+);
+
+
+};
+
+
+input.click();
+
+
+};
+
+</script>
+
 </body>
 </html>
