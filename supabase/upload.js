@@ -4,30 +4,50 @@ import { supabase } from "./client.js";
 export async function uploadMedia(file){
 
 
+try {
+
+
 const fileName =
-Date.now()+"-"+file.name;
+`${Date.now()}-${file.name}`;
 
 
-const {data,error}=
+console.log(
+"Uploading:",
+fileName
+);
 
-await supabase
+
+
+const { data, error } = await supabase
 .storage
 .from("snap-media")
 .upload(
 fileName,
-file
+file,
+{
+cacheControl: "3600",
+upsert: false
+}
 );
+
 
 
 if(error){
 
-console.log(error);
-return;
+console.error(
+"Upload error:",
+error
+);
+
+alert(error.message);
+
+return null;
 
 }
 
 
-const url =
+
+const publicUrl =
 supabase
 .storage
 .from("snap-media")
@@ -36,7 +56,30 @@ supabase
 .publicUrl;
 
 
-return url;
+
+console.log(
+"Uploaded URL:",
+publicUrl
+);
+
+
+
+return publicUrl;
+
+
+
+}
+
+catch(error){
+
+console.error(
+"Supabase error:",
+error
+);
+
+return null;
+
+}
 
 
 }
