@@ -1,125 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Snap X Feed</title>
+
 <link rel="stylesheet" href="../style.css">
+
 </head>
+
+
 <body>
+
 
 <header class="topbar">
 
-<img src="assets/logo.svg" class="logo-img" alt="Snap X">
+<div class="logo">
+
+<img src="../assets/logo.svg" class="logo-img" alt="Snap X">
+
 </div>
-<button id="themeToggle">🌙</button>
-<a href="profile.html" class="profile-icon">👤</a>
+
+
+<a href="profile.html" class="profile-icon">
+👤
+</a>
+
 
 </header>
 
+
+
 <section class="stories">
 
-<div class="story">➕<br><small>You</small></div>
-<div class="story">👩<br><small>Anna</small></div>
-<div class="story">👨<br><small>James</small></div>
-<div class="story">🧑<br><small>Chris</small></div>
-<div class="story">👩‍🦰<br><small>Sara</small></div>
+
+<div class="story">
+➕
+<br>
+<small>You</small>
+</div>
+
+
+<div class="story">
+👩
+<br>
+<small>Anna</small>
+</div>
+
+
+<div class="story">
+👨
+<br>
+<small>James</small>
+</div>
+
+
+<div class="story">
+🧑
+<br>
+<small>Chris</small>
+</div>
+
+
+<div class="story">
+👩‍🦰
+<br>
+<small>Sara</small>
+</div>
+
 
 </section>
+
+
+
 
 <section class="feed">
 
-<p>Loading Snap X posts...</p>
+<p>
+Loading Snap X posts...
+</p>
+
 
 </section>
 
+
+
+
+<!-- Create Post Button -->
+
 <button class="floating-btn" id="postBtn">
+
 ＋
+
 </button>
+
+
+
+
 
 <nav class="bottom-nav">
 
-<a href="../index.html">🏠</a>
 
-<a href="search.html">🔍</a>
+<a href="../index.html">
+🏠
+</a>
 
-<button class="floating-btn" id="postBtn">
-＋
-</button>
 
-<a href="notifications.html">🔔</a>
+<a href="search.html">
+🔍
+</a>
 
-<a href="messages.html">💬</a>
 
-<a href="profile.html">👤</a>
+<a href="#" id="createNav">
+➕
+</a>
+
+
+<a href="notifications.html">
+🔔
+</a>
+
+
+<a href="messages.html">
+💬
+</a>
+
+
+<a href="profile.html">
+👤
+</a>
+
 
 </nav>
 
-<script type="module">
-
-import {
-createPost
-}
-from "../firebase/posts.js";
 
 
-document
-.getElementById("postBtn")
-.onclick=()=>{
-
-let text=
-prompt("What's on your mind?");
 
 
-if(text){
+<!-- Firebase Feed -->
 
-createPost(text);
-
-}
-
-};
-
-</script>
 <script type="module" src="../firebase/feed.js"></script>
 
+
+
+
+
+<!-- Supabase Upload -->
+
 <script type="module">
 
+
 import {
+
 uploadMedia
-}
-from "../supabase/upload.js";
+
+} from "../supabase/upload.js";
 
 
-document
-.getElementById("postBtn")
-.onclick=()=>{
 
 
-let input=
-document.createElement("input");
+
+const uploadButton =
+document.getElementById("postBtn");
 
 
-input.type="file";
 
-input.accept=
-"image/*,video/*";
-
-
-input.onchange=
-async()=>{
-
-
-let file=input.files[0];
-
-
-let url=
-await uploadMedia(file);
 
 
 console.log(
-"Uploaded:",
-url
+"Snap X upload ready",
+uploadButton
 );
+
+
+
+
+
+uploadButton.onclick = () => {
+
+
+const input =
+document.createElement("input");
+
+
+
+input.type = "file";
+
+
+input.accept =
+"image/*,video/*";
+
+
+
+
+
+input.onchange = async () => {
+
+
+const file =
+input.files[0];
+
+
+
+if(!file){
+
+return;
+
+}
+
+
+
+
+console.log(
+"Selected file:",
+file.name
+);
+
+
+
+
+const url =
+await uploadMedia(file);
+
+
+
+
+
+if(url){
 
 
 alert(
@@ -127,15 +237,35 @@ alert(
 );
 
 
+console.log(
+"Media URL:",
+url
+);
+
+
+}
+
+
+
 };
+
+
 
 
 input.click();
 
 
+
 };
+
+
+
+
 
 </script>
 
+
+
 </body>
+
 </html>
