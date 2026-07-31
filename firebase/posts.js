@@ -1,6 +1,4 @@
-import {
-db
-} from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 
 import {
@@ -15,22 +13,31 @@ from
 export async function createPost(text){
 
 
+const user = auth.currentUser;
+
+
 await addDoc(
+
 collection(db,"posts"),
+
 {
 
-username:"SnapX User",
+username:
+user.email,
 
 content:text,
 
 likes:0,
 
-createdAt:serverTimestamp()
+createdAt:
+serverTimestamp()
 
-});
+}
+
+);
 
 
-alert("Post uploaded 🚀");
+alert("Posted 🚀");
 
 
 }
