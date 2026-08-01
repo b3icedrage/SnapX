@@ -14,10 +14,24 @@
 
 <body>
 
+<header class="topbar">
 
+<img
+src="../assets/logo.svg"
+class="logo-img"
+alt="Snap X">
 
-</div>
+<a
+href="feed.html"
+class="profile-icon">
 
+🏠
+
+</a>
+
+</header>
+
+<div class="profile">
 <img
 id="photoPreview"
 class="avatar"
@@ -41,7 +55,7 @@ Followers
 </div>
 
 <div>
-<b id="followinh">
+<b id="following">
 0</b>
 <br>
 Following
@@ -86,6 +100,7 @@ Save Profile
 <button id="logoutBtn" class="follow-btn">
     Logout
 </button>
+</div>
 
 <script type="module" src="../firebase/authGuard.js"></script>
 
@@ -94,19 +109,24 @@ Save Profile
 src="../firebase/profile.js">
 </script>
 
-<script>
+<script type="module">
+
+import { logout } from "../firebase/logout.js";
+
 document
-    .getElementById("logoutBtn")
-    .onclick = async () => {
+.getElementById("logoutBtn")
+.onclick = async () => {
 
-        const ok = confirm("Are you sure you want to logout?");
+    const ok = confirm("Are you sure you want to logout?");
 
-        if (!ok) return;
+    if (!ok) return;
 
-        await logout();
+    await logout();
 
-    };
+};
+
 </script>
+
 
 <script type="module">
 
