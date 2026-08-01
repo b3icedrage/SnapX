@@ -161,21 +161,107 @@ src="../firebase/feed.js">
 
 <!-- Upload System -->
 
-<script>
+<script type="module">
 
-const btn = document.getElementById("createBtn");
+import { uploadMedia } from "../supabase/upload.js";
 
-console.log("Button:", btn);
+
+const btn =
+document.getElementById("createBtn");
+
+
+console.log("Snap X upload button:", btn);
+
 
 
 btn.onclick = () => {
 
-alert("Snap X button works!");
+
+const input =
+document.createElement("input");
+
+
+input.type = "file";
+
+input.accept = "image/*,video/*";
+
+
+
+input.onchange = async () => {
+
+
+const file =
+input.files[0];
+
+
+if(!file){
+
+console.log("No file selected");
+
+return;
+
+}
+
+
+
+console.log(
+"Selected file:",
+file.name
+);
+
+
+
+try {
+
+
+const url =
+await uploadMedia(file);
+
+
+
+console.log(
+"Upload result:",
+url
+);
+
+
+
+if(url){
+
+alert(
+"Uploaded successfully 🚀"
+);
+
+}
+
+
+}
+
+catch(error){
+
+console.error(
+"Upload failed:",
+error
+);
+
+alert(
+"Upload error. Check console."
+);
+
+}
+
 
 };
 
-</script>
 
+
+input.click();
+
+
+};
+
+
+</script>
 
 
 
