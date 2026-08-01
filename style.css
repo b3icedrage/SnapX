@@ -18,6 +18,28 @@ body{
     background:#111827;
 }
 
+#checking{
+
+position:fixed;
+
+inset:0;
+
+background:#000;
+
+color:white;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+z-index:9999;
+
+}
+
 .auth-box{
 
 height:100vh;
