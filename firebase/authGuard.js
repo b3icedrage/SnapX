@@ -1,36 +1,32 @@
 import { auth } from "./firebase.js";
-
 import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const page = window.location.pathname;
-
-const isPublic =
-page.endsWith("login.html") ||
-page.endsWith("signup.html");
+console.log("Auth guard loaded");
 
 onAuthStateChanged(auth, (user) => {
+  console.log("Auth state changed:", user);
 
-  console.log("Current Firebase user:", user);
+  const overlay = document.getElementById("checking");
+  if (overlay) {
+    overlay.remove();
+    console.log("Checking overlay removed");
+  }
 
-  document.getElementById("checking")?.remove();
+  const page = window.location.pathname;
+  const isPublic =
+    page.endsWith("login.html") ||
+    page.endsWith("signup.html");
 
-  if (user) {
-
-    // If already logged in and on login/signup,
-    // go to the feed.
-    if (isPublic) {
-      window.location.replace("feed.html");
-    }
-
-    // Otherwise stay on the current protected page.
+  if (!user && !isPublic) {
+    console.log("Redirecting to login...");
+    window.location.replace("login.html");
     return;
   }
 
-  // Not logged in
-  if (!isPublic) {
-    window.location.replace("login.html");
+  if (user && isPublic) {
+    console.log("Redirecting to feed...");
+    window.location.replace("feed.html");
   }
-
 });
