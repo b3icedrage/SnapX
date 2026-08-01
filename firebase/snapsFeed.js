@@ -1,3 +1,4 @@
+import { toggleLike } from "./likes.js";
 import { openProfile } from "./openProfile.js";
 import { database } from "./firebase.js";
 
@@ -297,12 +298,9 @@ data-id="${post.id}">
 
             button.onclick = () => {
 
-                console.log(
-                    "Like:",
-                    button.dataset.id
-                );
+    toggleLike(button.dataset.id);
 
-            };
+};
 
         });
 

@@ -1,4 +1,4 @@
-import { database, auth } from "./firebase.js";
+import { auth, database } from "./firebase.js";
 
 import {
     ref,
@@ -6,14 +6,11 @@ import {
     update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-export async function likePost(postId) {
+export async function toggleLike(postId) {
 
     const user = auth.currentUser;
 
-    if (!user) {
-        alert("Please login.");
-        return;
-    }
+    if (!user) return;
 
     const postRef = ref(database, "posts/" + postId);
 
@@ -25,24 +22,32 @@ export async function likePost(postId) {
 
     const likedBy = post.likedBy || {};
 
+    const likes = post.likes || 0;
+
     if (likedBy[user.uid]) {
 
         delete likedBy[user.uid];
+
+        await update(postRef, {
+
+            likes: Math.max(0, likes - 1),
+
+            likedBy
+
+        });
 
     } else {
 
         likedBy[user.uid] = true;
 
+        await update(postRef, {
+
+            likes: likes + 1,
+
+            likedBy
+
+        });
+
     }
-
-    const likes = Object.keys(likedBy).length;
-
-    await update(postRef, {
-
-        likedBy,
-
-        likes
-
-    });
 
 }
