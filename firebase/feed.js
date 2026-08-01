@@ -1,65 +1,84 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
+
 
 import {
 collection,
 getDocs,
 query,
-orderBy
+orderBy,
+doc,
+setDoc,
+getDoc,
+updateDoc,
+increment
 }
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const feedContainer = document.querySelector(".feed");
+
+const feed =
+document.querySelector(".feed");
 
 
-async function loadPosts(){
 
-try{
+async function loadFeed(){
 
-const q = query(
+
+const q =
+query(
 collection(db,"posts"),
 orderBy("createdAt","desc")
 );
 
 
-const snapshot = await getDocs(q);
+
+const snapshot =
+await getDocs(q);
 
 
-feedContainer.innerHTML="";
+
+feed.innerHTML="";
 
 
-snapshot.forEach((doc)=>{
+
+snapshot.forEach((item)=>{
 
 
-const post = doc.data();
+const post =
+item.data();
 
 
-feedContainer.innerHTML += `
+const id =
+item.id;
 
-<div class="post">
 
 
-<strong>
-${post.username}
-</strong>
+feed.innerHTML += `
+
+
+<div class="post"
+data-id="${id}">
 
 
 ${
+
 post.type?.startsWith("video")
 
 ?
 
 `
-<video class="post-media" controls>
-<source src="${post.media}">
+<video
+class="post-media"
+src="${post.media}"
+controls>
 </video>
 `
 
 :
 
 `
-<img 
+<img
 class="post-media"
 src="${post.media}">
 `
@@ -68,37 +87,160 @@ src="${post.media}">
 
 
 
+<div class="post-info">
+
+<h3>
+${post.username}
+</h3>
+
+
+<p>
+${post.caption || ""}
+</p>
+
+
+</div>
+
+
+
 <div class="actions">
 
-<button>
-❤️ ${post.likes || 0}
+
+<button class="like"
+data-id="${id}">
+
+❤️
+<span>
+${post.likes || 0}
+</span>
+
 </button>
+
+
 
 <button>
 💬
 </button>
 
+
 <button>
 📤
 </button>
 
+
 </div>
 
 
 </div>
+
 
 `;
 
 
+
+});
+
+
+
+addLikeEvents();
+
+
 }
-catch(error){
 
-console.log(error);
+
+
+function addLikeEvents(){
+
+
+document
+.querySelectorAll(".like")
+.forEach(button=>{
+
+
+button.onclick=async()=>{
+
+
+const postId =
+button.dataset.id;
+
+
+
+const postRef =
+doc(db,"posts",postId);
+
+
+
+await updateDoc(
+postRef,
+{
+
+likes:
+increment(1)
+
+}
+);
+
+
+
+let count =
+button.querySelector("span");
+
+
+count.innerHTML =
+Number(count.innerHTML)+1;
+
+
+
+button.classList.add(
+"liked"
+);
+
+
+
+};
+
+
+
+});
+
+
 
 }
 
+document.addEventListener(
+"dblclick",
+(e)=>{
 
-}
+
+const post =
+e.target.closest(".post");
 
 
-loadPosts();
+if(!post) return;
+
+
+
+const heart =
+document.createElement("div");
+
+
+heart.className="big-heart";
+
+
+heart.innerHTML="❤️";
+
+
+post.appendChild(heart);
+
+
+
+setTimeout(()=>{
+
+heart.remove();
+
+},800);
+
+
+});
+
+loadFeed();
