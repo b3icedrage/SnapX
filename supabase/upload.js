@@ -1,85 +1,83 @@
 import { supabase } from "./client.js";
 
+import { db, auth } from "../firebase/firebase.js";
+
+import {
+collection,
+addDoc,
+serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 export async function uploadMedia(file){
 
-
-try {
-
-
-const fileName =
-`${Date.now()}-${file.name}`;
+if(!file) return null;
 
 
-console.log(
-"Uploading:",
-fileName
-);
+const cleanName =
+file.name.replace(/[^a-zA-Z0-9.-]/g,"_");
 
 
+const filePath =
+`uploads/${Date.now()}_${cleanName}`;
 
-const { data, error } = await supabase
+
+const {error} =
+await supabase
 .storage
 .from("snap-media")
-.upload(
-fileName,
-file,
-{
-cacheControl: "3600",
-upsert: false
-}
-);
-
+.upload(filePath,file);
 
 
 if(error){
 
-console.error(
-"Upload error:",
-error
-);
-
-alert(error.message);
-
+console.error(error);
 return null;
 
 }
 
 
 
-const publicUrl =
+const url =
 supabase
 .storage
 .from("snap-media")
-.getPublicUrl(fileName)
+.getPublicUrl(filePath)
 .data
 .publicUrl;
 
 
 
-console.log(
-"Uploaded URL:",
-publicUrl
+const user =
+auth.currentUser;
+
+
+
+await addDoc(
+collection(db,"posts"),
+{
+
+username:
+user?.email || "Snap X User",
+
+media:url,
+
+type:file.type,
+
+likes:0,
+
+createdAt:
+serverTimestamp()
+
+}
+
 );
 
 
 
-return publicUrl;
-
-
-
-}
-
-catch(error){
-
-console.error(
-"Supabase error:",
-error
-);
-
-return null;
-
-}
+return url;
 
 
 }

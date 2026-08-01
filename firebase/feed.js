@@ -39,43 +39,55 @@ feedContainer.innerHTML += `
 
 <div class="post">
 
-<div class="post-header">
 
-<strong>${post.username}</strong>
-
-<span>Snap X</span>
-
-</div>
+<strong>
+${post.username}
+</strong>
 
 
-<div class="post-content">
+${
+post.type?.startsWith("video")
 
-${post.content}
+?
 
-</div>
+`
+<video class="post-media" controls>
+<source src="${post.media}">
+</video>
+`
+
+:
+
+`
+<img 
+class="post-media"
+src="${post.media}">
+`
+
+}
+
 
 
 <div class="actions">
 
-<button class="like-btn">
+<button>
 ❤️ ${post.likes || 0}
 </button>
 
 <button>
-💬 Comment
+💬
 </button>
 
 <button>
-📤 Share
+📤
 </button>
 
 </div>
+
 
 </div>
 
 `;
-
-});
 
 
 }
