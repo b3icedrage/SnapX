@@ -15,7 +15,7 @@
 
 <body>
 
-
+<div class="main-content">
 <header class="topbar">
 
 <img src="../assets/logo.svg" class="logo-img" alt="Snap X">
@@ -144,7 +144,7 @@ Loading Snap X posts...
 
 
 </nav>
-
+</div>
 
 <script type="module" src="../firebase/authGuard.js"></script>
 
@@ -269,6 +269,16 @@ input.click();
 <script>
 window.addEventListener("load", () => {
   document.body.classList.add("loaded");
+});
+</script>
+
+<script>
+window.addEventListener("load", () => {
+    const content = document.querySelector(".main-content");
+
+    requestAnimationFrame(() => {
+        content.classList.add("show");
+    });
 });
 </script>
 
