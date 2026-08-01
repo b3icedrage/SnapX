@@ -1,93 +1,189 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
 
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Snap X Profile</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="../style.css">
+<link
+rel="stylesheet"
+href="../style.css">
 
 </head>
 
 <body>
 
+<!-- ==========================
+     AUTH GUARD
+========================== -->
+
+<script
+type="module"
+src="../firebase/authGuard.js">
+</script>
+
+<!-- ==========================
+     TOP BAR
+========================== -->
+
 <header class="topbar">
+
+<a href="feed.html">
 
 <img
 src="../assets/logo.svg"
 class="logo-img"
 alt="Snap X">
 
-<a
-href="feed.html"
-class="profile-icon">
-
-🏠
-
 </a>
+
+<h2>
+
+Profile
+
+</h2>
 
 </header>
 
-<div class="profile">
+<!-- ==========================
+     PROFILE
+========================== -->
+
+<main class="profile">
+
+<!-- Avatar -->
+
+<div class="profile-header">
+
 <img
 id="photoPreview"
 class="avatar"
 src="../assets/default-avatar.png">
 
-<div class="stats">
+<div class="profile-info">
 
+<h2 id="profileName">
 
-<div>
-<b id="posts">
-0</b>
-<br>
-Posts
-</div>
+Loading...
 
-<div>
-<b id="followers">
-0</b>
-<br>
-Followers
-</div>
-
-<div>
-<b id="following">
-0</b>
-<br>
-Following
-</div>
-
-
-<h2>
-Your Snaps
 </h2>
 
+<p id="profileEmail">
 
+Loading...
 
-<div id="userPosts"
-class="post-grid">
-
+</p>
 
 </div>
 
+</div>
+
+<!-- Stats -->
+
+<div class="stats">
+
+<div class="stat">
+
+<h3 id="posts">
+
+0
+
+</h3>
+
+<span>
+
+Posts
+
+</span>
+
+</div>
+
+<div class="stat">
+
+<h3 id="followers">
+
+0
+
+</h3>
+
+<span>
+
+Followers
+
+</span>
+
+</div>
+
+<div class="stat">
+
+<h3 id="following">
+
+0
+
+</h3>
+
+<span>
+
+Following
+
+</span>
+
+</div>
+
+</div>
+
+<!-- Edit Profile -->
+
+<div class="glass round shadow"
+style="padding:20px;margin-bottom:25px;">
+
+<h3
+style="margin-bottom:18px;">
+
+Edit Profile
+
+</h3>
 
 <input
 id="displayName"
 type="text"
-placeholder="Display Name">
+placeholder="Display name"
+style="
+width:100%;
+padding:15px;
+margin-bottom:15px;
+border-radius:14px;
+background:#222;
+color:white;
+">
 
 <textarea
 id="bio"
-placeholder="Tell people about yourself"></textarea>
+placeholder="Tell people about yourself..."
+style="
+width:100%;
+height:100px;
+padding:15px;
+margin-bottom:15px;
+border:none;
+border-radius:14px;
+background:#222;
+color:white;
+resize:none;
+"></textarea>
 
 <input
 id="photoInput"
 type="file"
 accept="image/*">
+
+<br><br>
 
 <button
 id="saveProfile"
@@ -97,15 +193,51 @@ Save Profile
 
 </button>
 
-<button id="logoutBtn" class="follow-btn">
-    Logout
+<br><br>
+
+<button
+id="logoutBtn"
+class="follow-btn">
+
+Logout
+
 </button>
+
 </div>
 
-<script type="module" src="../firebase/authGuard.js"></script>
+<!-- User Posts -->
 
+<h2
+style="margin-bottom:15px;">
 
-<script type="module"
+Your Posts
+
+</h2>
+
+<div
+id="userPosts"
+class="post-grid">
+
+<div class="loading">
+
+Loading your posts...
+
+</div>
+
+</div>
+
+</main>
+
+<!-- ==========================
+     SCRIPTS
+========================== -->
+<script
+type="module"
+src="../firebase/userPosts.js">
+</script>
+
+<script
+type="module"
 src="../firebase/profile.js">
 </script>
 
@@ -117,68 +249,14 @@ document
 .getElementById("logoutBtn")
 .onclick = async () => {
 
-    const ok = confirm("Are you sure you want to logout?");
-
-    if (!ok) return;
+    if (!confirm("Logout from Snap X?"))
+        return;
 
     await logout();
 
 };
 
 </script>
-
-
-<script type="module">
-
-import {
-    loadProfile,
-    saveProfile
-} from "../firebase/profile.js";
-
-import {
-    uploadMedia
-} from "../supabase/upload.js";
-
-loadProfile();
-
-document
-.getElementById("saveProfile")
-.onclick = async () => {
-
-    const file =
-        document
-        .getElementById("photoInput")
-        .files[0];
-
-    let photoUrl = null;
-
-    if(file){
-
-        photoUrl =
-            await uploadMedia(file);
-
-    }
-
-    await saveProfile(photoUrl);
-
-};
-document
-.getElementById("photoInput")
-.onchange = e => {
-
-    const file = e.target.files[0];
-
-    if(!file) return;
-
-    document
-    .getElementById("photoPreview")
-    .src =
-        URL.createObjectURL(file);
-
-};
-
-</script>
-
 </body>
 
 </html>

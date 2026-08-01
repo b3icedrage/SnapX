@@ -1,87 +1,114 @@
-import {db,auth} from "./firebase.js";
-
+import { auth, database } from "./firebase.js";
 
 import {
+    ref,
+    onValue,
+    remove
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-collection,
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-getDocs,
+onAuthStateChanged(auth, (user) => {
 
-query,
+    if (!user) return;
 
-where
+    const grid = document.getElementById("userPosts");
 
-}
+    const postsCounter = document.getElementById("posts");
 
-from
+    onValue(ref(database, "posts"), (snapshot) => {
 
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        grid.innerHTML = "";
 
+        if (!snapshot.exists()) {
 
+            postsCounter.textContent = "0";
 
-async function loadUserPosts(){
+            grid.innerHTML = `
+                <p style="text-align:center;color:#888;">
+                    You haven't posted anything yet.
+                </p>
+            `;
 
+            return;
+        }
 
-const user =
-auth.currentUser;
+        const posts = [];
 
+        snapshot.forEach((child) => {
 
+            const post = child.val();
 
-if(!user)return;
+            if (post.uid === user.uid) {
 
+                posts.push({
+                    id: child.key,
+                    ...post
+                });
 
+            }
 
-const q =
-query(
+        });
 
-collection(db,"posts"),
+        posts.sort((a, b) => b.createdAt - a.createdAt);
 
-where(
-"username",
-"==",
-user.email
-)
+        postsCounter.textContent = posts.length;
 
-);
+        posts.forEach((post) => {
 
+            const card = document.createElement("div");
+            card.className = "profile-post";
 
+            const media = post.type === "video"
+                ? `<video src="${post.media}" muted></video>`
+                : `<img src="${post.media}">`;
 
-const snap =
-await getDocs(q);
+            card.innerHTML = `
+                ${media}
 
+                <button class="delete-post">
+                    🗑
+                </button>
+            `;
 
+            card.onclick = () => {
 
-const box =
-document.getElementById(
-"userPosts"
-);
+                if (post.type === "video") {
 
+                    window.open(post.media);
 
+                } else {
 
-snap.forEach(doc=>{
+                    window.open(post.media);
 
+                }
 
-const post =
-doc.data();
+            };
 
+            card
+            .querySelector(".delete-post")
+            .onclick = async (e) => {
 
+                e.stopPropagation();
 
-box.innerHTML += `
+                const ok = confirm(
+                    "Delete this post?"
+                );
 
+                if (!ok) return;
 
-<img src="${post.media}">
+                await remove(
+                    ref(database, "posts/" + post.id)
+                );
 
+            };
 
-`;
+            grid.appendChild(card);
 
+        });
+
+    });
 
 });
-
-
-}
-
-
-
-auth.onAuthStateChanged(
-loadUserPosts
-);
