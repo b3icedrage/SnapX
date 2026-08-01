@@ -1,39 +1,67 @@
 import { supabase } from "./client.js";
 
-import { db, auth } from "../firebase/firebase.js";
-
-import {
-collection,
-addDoc,
-serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 export async function uploadMedia(file){
 
-if(!file) return null;
+console.log("UPLOAD FUNCTION STARTED");
 
 
-const cleanName =
-file.name.replace(/[^a-zA-Z0-9.-]/g,"_");
+if(!file){
+
+console.log("NO FILE");
+
+return null;
+
+}
 
 
-const filePath =
-`uploads/${Date.now()}_${cleanName}`;
+console.log(
+"File received:",
+file.name,
+file.type,
+file.size
+);
 
 
-const {error} =
+
+const fileName =
+Date.now() + "_" + file.name;
+
+
+
+console.log(
+"Uploading:",
+fileName
+);
+
+
+
+const result =
 await supabase
 .storage
 .from("snap-media")
-.upload(filePath,file);
+.upload(
+fileName,
+file
+);
 
 
-if(error){
 
-console.error(error);
+console.log(
+"SUPABASE RESPONSE:",
+result
+);
+
+
+
+if(result.error){
+
+console.error(
+result.error
+);
+
+alert(result.error.message);
+
 return null;
 
 }
@@ -44,35 +72,15 @@ const url =
 supabase
 .storage
 .from("snap-media")
-.getPublicUrl(filePath)
+.getPublicUrl(fileName)
 .data
 .publicUrl;
 
 
 
-const user =
-auth.currentUser;
-
-
-
-await addDoc(
-collection(db,"posts"),
-{
-
-username:
-user?.email || "Snap X User",
-
-media:url,
-
-type:file.type,
-
-likes:0,
-
-createdAt:
-serverTimestamp()
-
-}
-
+console.log(
+"PUBLIC URL:",
+url
 );
 
 
