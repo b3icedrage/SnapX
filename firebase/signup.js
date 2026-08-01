@@ -1,37 +1,46 @@
 import { auth, db } from "./firebase.js";
 
+
 import {
+
 createUserWithEmailAndPassword
+
 }
+
 from
+
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
+
 doc,
+
 setDoc
+
 }
+
 from
+
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const button =
-document.getElementById("signupBtn");
 
-
-button.onclick = async()=>{
+document
+.getElementById("signupBtn")
+.onclick = async()=>{
 
 
 const username =
-document.querySelector("#username").value;
+document.getElementById("username").value;
 
 
 const email =
-document.querySelector("#email").value;
+document.getElementById("email").value;
 
 
 const password =
-document.querySelector("#password").value;
+document.getElementById("password").value;
 
 
 
@@ -39,10 +48,15 @@ try{
 
 
 const result =
+
 await createUserWithEmailAndPassword(
+
 auth,
+
 email,
+
 password
+
 );
 
 
@@ -57,11 +71,14 @@ result.user.uid
 
 {
 
-username: username,
+username,
 
-email: email,
+email,
 
-bio:"New Snap X creator 🚀"
+bio:
+"New Snap X creator 🚀",
+
+avatar:""
 
 }
 
@@ -69,7 +86,8 @@ bio:"New Snap X creator 🚀"
 
 
 
-alert("Welcome to Snap X 🎉");
+window.location.href =
+"feed.html";
 
 
 }

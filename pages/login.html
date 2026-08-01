@@ -1,30 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snap X - Login</title>
+
+<title>Snap X Login</title>
+
 <link rel="stylesheet" href="../style.css">
+
 </head>
+
 
 <body>
 
-<div class="auth-container">
 
-<h1>Welcome Back</h1>
+<div class="auth-box">
 
-<input type="email" placeholder="Email">
 
-<input type="password" placeholder="Password">
+<div class="auth-logo">
+SX
+</div>
 
-<button class="primary-btn">Login</button>
+
+<h1>
+Welcome Back
+</h1>
+
+
+<input 
+id="email"
+type="email"
+placeholder="Email">
+
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+
+
+<button id="loginBtn">
+
+Login
+
+</button>
+
+
 
 <p>
+
 Don't have an account?
-<a href="signup.html">Sign Up</a>
+
+<a href="signup.html">
+Create one
+</a>
+
 </p>
+
 
 </div>
 
+
+
+
+<script type="module"
+src="../firebase/login.js">
+</script>
+
+
 </body>
+
 </html>
