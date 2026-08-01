@@ -89,48 +89,48 @@ Loading Snap X posts...
 
 
 
+<button id="createBtn" class="create-btn">
 
++
+
+</button>
 
 
  
 
 <nav class="bottom-nav">
 
-
-<a href="../index.html">
+<a href="../index.html" class="nav-item">
 <span class="icon">⌂</span>
+<span>Home</span>
 </a>
 
 
-<a href="search.html">
+<a href="snaps.html" class="nav-item">
+<span class="icon">▶</span>
+<span>Snaps</span>
+</a>
+
+
+<a href="search.html" class="nav-item">
 <span class="icon">⌕</span>
+<span>Search</span>
 </a>
 
 
-<button id="createNav">
-<span class="add-icon">+</span>
-</button>
-
-<button id="postBtn" style="display:none;"></button>
-
-
-<a href="notifications.html">
+<a href="notifications.html" class="nav-item">
 <span class="icon">♡</span>
+<span>Activity</span>
 </a>
 
 
-<a href="messages.html">
-<span class="icon">✉</span>
-</a>
-
-
-<a href="profile.html">
+<a href="profile.html" class="nav-item">
 <span class="icon">◎</span>
+<span>Profile</span>
 </a>
 
 
 </nav>
-
 
 
 
@@ -319,6 +319,58 @@ input.click();
 
 
 </script>
+
+<script type="module">
+
+import { uploadMedia } from "../supabase/upload.js";
+
+
+const createBtn =
+document.getElementById("createBtn");
+
+
+createBtn.onclick = ()=>{
+
+
+const input =
+document.createElement("input");
+
+
+input.type="file";
+
+input.accept="image/*,video/*";
+
+
+input.onchange=async()=>{
+
+
+const file=input.files[0];
+
+
+if(!file) return;
+
+
+const url =
+await uploadMedia(file);
+
+
+if(url){
+
+alert("Uploaded to Snap X 🚀");
+
+}
+
+};
+
+
+input.click();
+
+
+};
+
+
+</script>
+
 
 </body>
 
