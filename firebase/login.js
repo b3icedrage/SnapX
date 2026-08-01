@@ -1,59 +1,34 @@
 import { auth } from "./firebase.js";
 
-
 import {
-
 signInWithEmailAndPassword
-
 }
-
 from
-
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+document.getElementById("loginBtn").onclick = async () => {
 
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-document
-.getElementById("loginBtn")
-.onclick = async()=>{
+  try {
 
+    const result = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-const email =
-document.getElementById("email").value;
+    console.log("LOGIN SUCCESS", result.user);
 
+    window.location.replace("feed.html");
 
-const password =
-document.getElementById("password").value;
+  } catch (error) {
 
+    console.error(error);
 
+    alert(error.message);
 
-try{
-
-
-await signInWithEmailAndPassword(
-
-auth,
-
-email,
-
-password
-
-);
-
-
-
-window.location.href =
-"feed.html";
-
-
-}
-
-
-catch(error){
-
-alert(error.message);
-
-}
-
+  }
 
 };

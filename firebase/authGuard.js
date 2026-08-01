@@ -1,75 +1,36 @@
 import { auth } from "./firebase.js";
 
-
 import {
-onAuthStateChanged
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
-
-const page =
-window.location.pathname;
-
-
-
-const publicPages = [
-
-"login.html",
-
-"signup.html"
-
-];
-
-
+const page = window.location.pathname;
 
 const isPublic =
-publicPages.some(
-(item)=>
-page.includes(item)
-);
+page.endsWith("login.html") ||
+page.endsWith("signup.html");
 
+onAuthStateChanged(auth, (user) => {
 
+  console.log("Current Firebase user:", user);
 
-onAuthStateChanged(
-auth,
-(user)=>{
+  document.getElementById("checking")?.remove();
 
+  if (user) {
 
-console.log(
-"Current Firebase user:",
-user
-);
+    // If already logged in and on login/signup,
+    // go to the feed.
+    if (isPublic) {
+      window.location.replace("feed.html");
+    }
 
+    // Otherwise stay on the current protected page.
+    return;
+  }
 
-document
-.getElementById("authLoading")
-?.remove();
-
-
-
-if(!user && !isPublic){
-
-
-window.location.replace(
-"login.html"
-);
-
-
-}
-
-
-
-if(user && isPublic){
-
-
-window.location.replace(
-"feed.html"
-);
-
-
-}
-
+  // Not logged in
+  if (!isPublic) {
+    window.location.replace("login.html");
+  }
 
 });
