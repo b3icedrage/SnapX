@@ -1,33 +1,38 @@
 import { auth, database } from "./firebase.js";
+import { toggleFollow } from "./follow.js";
+import { openProfile } from "./openProfile.js";
+
 import {
     ref,
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import { toggleFollow } from "./follow.js";
-
 const feed = document.getElementById("discoverFeed");
 const userResults = document.getElementById("userResults");
 const searchInput = document.getElementById("searchInput");
 
-/* ---------- Trending Posts ---------- */
+/* --------------------------
+   TRENDING POSTS
+-------------------------- */
 
 onValue(ref(database, "posts"), (snapshot) => {
 
     feed.innerHTML = "";
 
     if (!snapshot.exists()) {
-        feed.innerHTML = "<p>No posts yet.</p>";
+
+        feed.innerHTML = "<p>No trending posts yet.</p>";
         return;
+
     }
 
     const posts = [];
 
-    snapshot.forEach(post => {
+    snapshot.forEach((child) => {
 
         posts.push({
-            id: post.key,
-            ...post.val()
+            id: child.key,
+            ...child.val()
         });
 
     });
@@ -38,65 +43,122 @@ onValue(ref(database, "posts"), (snapshot) => {
         const likesB = b.likes || 0;
 
         if (likesA === likesB) {
-            return b.createdAt - a.createdAt;
+
+            return (b.createdAt || 0) - (a.createdAt || 0);
+
         }
 
         return likesB - likesA;
 
     });
 
-    posts.forEach(post => {
+    posts.forEach((post) => {
+
+        const card = document.createElement("div");
+
+        card.className = "post";
 
         const media =
             post.type === "video"
-            ? `<video class="uploaded-media" src="${post.media}" controls playsinline></video>`
-            : `<img class="uploaded-media" src="${post.media}">`;
+                ? `
+                <video
+                    class="uploaded-media"
+                    src="${post.media}"
+                    controls
+                    playsinline>
+                </video>
+                `
+                : `
+                <img
+                    class="uploaded-media"
+                    src="${post.media}">
+                `;
 
-        feed.innerHTML += `
-            <div class="post">
+        card.innerHTML = `
 
-                ${media}
+        <div class="post-header">
 
-                <div class="post-content">
+            <img
+            class="mini-avatar profile-link"
+            data-uid="${post.uid}"
+            src="${post.photo || "../assets/default-avatar.png"}">
 
-                    <b>${post.username}</b>
+            <div style="flex:1">
 
-                    <p>${post.caption || ""}</p>
+                <b
+                class="profile-link username"
+                data-uid="${post.uid}">
 
-                    <div class="actions">
+                    ${post.username}
 
-                        <button>❤️ ${post.likes || 0}</button>
-
-                        <button>💬 ${post.comments || 0}</button>
-
-                    </div>
-
-                </div>
+                </b>
 
             </div>
+
+        </div>
+
+        ${media}
+
+        <div class="post-content">
+
+            <p>${post.caption || ""}</p>
+
+            <div class="actions">
+
+                <button>
+
+                    ❤️ ${post.likes || 0}
+
+                </button>
+
+                <button>
+
+                    💬 ${post.comments || 0}
+
+                </button>
+
+            </div>
+
+        </div>
+
         `;
+
+        card.querySelectorAll(".profile-link")
+        .forEach((item) => {
+
+            item.onclick = () => {
+
+                openProfile(item.dataset.uid);
+
+            };
+
+        });
+
+        feed.appendChild(card);
 
     });
 
 });
 
-/* ---------- Live User Search ---------- */
+/* --------------------------
+   LIVE USER SEARCH
+-------------------------- */
 
 let users = {};
 
-onValue(ref(database, "users"), snapshot => {
+onValue(ref(database, "users"), (snapshot) => {
 
     users = snapshot.val() || {};
 
-    renderUsers("");
+    renderUsers(searchInput.value.trim().toLowerCase());
 
 });
 
-searchInput.oninput = () => {
+searchInput.addEventListener("input", () => {
 
     renderUsers(searchInput.value.trim().toLowerCase());
 
-};
+});
 
 function renderUsers(query) {
 
@@ -105,14 +167,18 @@ function renderUsers(query) {
     Object.entries(users).forEach(([uid, user]) => {
 
         const name =
-            (user.displayName || user.username || "").toLowerCase();
+            (
+                user.displayName ||
+                user.username ||
+                ""
+            ).toLowerCase();
 
         if (query && !name.includes(query))
             return;
 
         const following =
-            user.followers &&
             auth.currentUser &&
+            user.followers &&
             user.followers[auth.currentUser.uid];
 
         const card = document.createElement("div");
@@ -120,53 +186,52 @@ function renderUsers(query) {
         card.className = "user-card";
 
         card.innerHTML = `
+
             <img
-            src="${user.photo || "../assets/default-avatar.png"}"
-            class="mini-avatar">
+            class="mini-avatar"
+            src="${user.photo || "../assets/default-avatar.png"}">
 
             <div class="user-info">
 
                 <h3>
+
                     ${user.displayName || user.username}
+
                 </h3>
 
                 <p>
+
                     ${user.bio || ""}
+
                 </p>
 
             </div>
 
-            <button
-            class="follow-btn">
+            <button class="follow-btn">
 
                 ${following ? "Following" : "Follow"}
 
             </button>
+
         `;
+
+        card.onclick = () => {
+
+            openProfile(uid);
+
+        };
 
         card
         .querySelector(".follow-btn")
-        .onclick = () => {
+        .onclick = (e) => {
+
+            e.stopPropagation();
 
             toggleFollow(uid);
 
         };
 
-        card.querySelector(".mini-avatar").onclick = () => {
-
-    window.location.href =
-        `user.html?uid=${uid}`;
-
-};
-
-card.querySelector("h3").onclick = () => {
-
-    window.location.href =
-        `user.html?uid=${uid}`;
-
-};
-
-userResults.appendChild(card);
+        userResults.appendChild(card);
 
     });
 

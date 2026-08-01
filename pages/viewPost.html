@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Snap X</title>
+
+<link
+rel="stylesheet"
+href="../style.css">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+<a href="javascript:history.back()">
+
+← Back
+
+</a>
+
+<h2>
+
+Post
+
+</h2>
+
+</header>
+
+<div id="viewer"></div>
+
+<script>
+
+const post =
+JSON.parse(
+sessionStorage.getItem(
+"snapx_selected_post"
+));
+
+const viewer =
+document.getElementById("viewer");
+
+if(post){
+
+if(post.type==="video"){
+
+viewer.innerHTML=`
+
+<video
+src="${post.media}"
+controls
+autoplay
+playsinline
+style="width:100%;">
+</video>
+
+<div class="post-content">
+
+<h3>${post.username}</h3>
+
+<p>${post.caption||""}</p>
+
+</div>
+
+`;
+
+}else{
+
+viewer.innerHTML=`
+
+<img
+src="${post.media}"
+style="width:100%;">
+
+<div class="post-content">
+
+<h3>${post.username}</h3>
+
+<p>${post.caption||""}</p>
+
+</div>
+
+`;
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
