@@ -89,17 +89,10 @@ Loading Snap X posts...
 
 
 
-<!-- Create Post Button -->
-
-<button class="floating-btn" id="postBtn">
-
-＋
-
-</button>
 
 
 
-
+ 
 
 <nav class="bottom-nav">
 
@@ -117,6 +110,8 @@ Loading Snap X posts...
 <button id="createNav">
 <span class="add-icon">+</span>
 </button>
+
+<button id="postBtn" style="display:none;"></button>
 
 
 <a href="notifications.html">
@@ -263,7 +258,67 @@ input.click();
 
 </script>
 
+<script type="module">
 
+import { uploadMedia } from "../supabase/upload.js";
+
+
+const createButton =
+document.getElementById("createNav");
+
+
+createButton.onclick = () => {
+
+
+const input =
+document.createElement("input");
+
+
+input.type = "file";
+
+input.accept =
+"image/*,video/*";
+
+
+input.onchange = async()=>{
+
+
+const file =
+input.files[0];
+
+
+if(!file) return;
+
+
+console.log(
+"Selected:",
+file.name
+);
+
+
+const result =
+await uploadMedia(file);
+
+
+if(result){
+
+alert(
+"Posted to Snap X 🚀"
+);
+
+}
+
+
+};
+
+
+input.click();
+
+
+};
+
+
+</script>
 
 </body>
 
