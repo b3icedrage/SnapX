@@ -118,7 +118,8 @@ ${post.likes || 0}
 
 
 
-<button>
+<button class="comment-btn"
+data-id="${id}">
 💬
 </button>
 
@@ -244,3 +245,50 @@ heart.remove();
 });
 
 loadFeed();
+
+import {
+addComment
+}
+from "./comments.js";
+
+
+
+document
+.addEventListener(
+"click",
+(e)=>{
+
+
+if(
+e.target.classList.contains(
+"comment-btn"
+)
+){
+
+
+let postId =
+e.target.dataset.id;
+
+
+
+let text =
+prompt(
+"Write a comment"
+);
+
+
+
+if(text){
+
+addComment(
+postId,
+text
+);
+
+}
+
+
+}
+
+
+});
