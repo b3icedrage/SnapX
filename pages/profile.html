@@ -98,6 +98,36 @@ class="post-grid">
 
 </div>
 
+<img
+id="photoPreview"
+class="avatar"
+src="../assets/default-avatar.png">
+
+<input
+id="displayName"
+type="text"
+placeholder="Display Name">
+
+<textarea
+id="bio"
+placeholder="Tell people about yourself"></textarea>
+
+<input
+id="photoInput"
+type="file"
+accept="image/*">
+
+<button
+id="saveProfile"
+class="follow-btn">
+
+Save Profile
+
+</button>
+
+<button id="logoutBtn" class="follow-btn">
+    Logout
+</button>
 
 <script type="module" src="../firebase/authGuard.js"></script>
 
@@ -106,6 +136,69 @@ class="post-grid">
 src="../firebase/profile.js">
 </script>
 
+document
+    .getElementById("logoutBtn")
+    .onclick = async () => {
+
+        const ok = confirm("Are you sure you want to logout?");
+
+        if (!ok) return;
+
+        await logout();
+
+    };
+</script>
+
+<script type="module">
+
+import {
+    loadProfile,
+    saveProfile
+} from "../firebase/profile.js";
+
+import {
+    uploadMedia
+} from "../supabase/upload.js";
+
+loadProfile();
+
+document
+.getElementById("saveProfile")
+.onclick = async () => {
+
+    const file =
+        document
+        .getElementById("photoInput")
+        .files[0];
+
+    let photoUrl = null;
+
+    if(file){
+
+        photoUrl =
+            await uploadMedia(file);
+
+    }
+
+    await saveProfile(photoUrl);
+
+};
+document
+.getElementById("photoInput")
+.onchange = e => {
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    document
+    .getElementById("photoPreview")
+    .src =
+        URL.createObjectURL(file);
+
+};
+
+</script>
 
 </body>
 

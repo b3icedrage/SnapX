@@ -1,22 +1,23 @@
 import { auth } from "./firebase.js";
 
-
 import {
-signOut
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+export async function logout() {
 
+    try {
 
-export function logout(){
+        await signOut(auth);
 
+        window.location.replace("../pages/login.html");
 
-signOut(auth);
+    } catch (error) {
 
+        console.error(error);
 
-window.location.href =
-"../index.html";
+        alert("Logout failed.");
 
+    }
 
 }

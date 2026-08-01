@@ -1,111 +1,67 @@
-import {db,auth} from "./firebase.js";
-
-
-import {
-doc,
-getDoc
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-auth.onAuthStateChanged(async(user)=>{
-
-
-if(user){
-
-
-const snap =
-await getDoc(
-doc(db,"users",user.uid)
-);
-
-
-const data=snap.data();
-
-
-document
-.getElementById("username")
-.innerHTML=data.username;
-
-
-document
-.getElementById("bio")
-.innerHTML=data.bio;
-
-
-}
-
-
-});
-
-import { db, auth } from "./firebase.js";
-
+import { auth, database } from "./firebase.js";
 
 import {
-doc,
-getDoc
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    ref,
+    get,
+    update
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+export function loadProfile() {
 
-auth.onAuthStateChanged(async(user)=>{
+    onAuthStateChanged(auth, async (user) => {
 
+        if (!user) return;
 
-if(!user) return;
+        const snap = await get(
+            ref(database, "users/" + user.uid)
+        );
 
+        if (!snap.exists()) return;
 
+        const profile = snap.val();
 
-const profile =
-await getDoc(
-doc(
-db,
-"users",
-user.uid
-)
-);
+        document.getElementById("displayName").value =
+            profile.displayName || "";
 
+        document.getElementById("bio").value =
+            profile.bio || "";
 
+        document.getElementById("photoPreview").src =
+            profile.photo || "../assets/default-avatar.png";
 
-if(profile.exists()){
-
-
-const data =
-profile.data();
-
-
-
-document
-.getElementById("profileName")
-.innerHTML =
-data.username;
-
-
-
-document
-.getElementById("bio")
-.innerHTML =
-data.bio;
-
-
-
-if(data.avatar){
-
-
-document
-.getElementById("avatar")
-.src =
-data.avatar;
-
+    });
 
 }
 
+export async function saveProfile(photoUrl = null) {
 
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const updates = {
+
+        displayName:
+            document.getElementById("displayName").value,
+
+        bio:
+            document.getElementById("bio").value
+
+    };
+
+    if (photoUrl) {
+        updates.photo = photoUrl;
+    }
+
+    await update(
+        ref(database, "users/" + user.uid),
+        updates
+    );
+
+    alert("Profile updated successfully 🚀");
 
 }
-
-
-
-});

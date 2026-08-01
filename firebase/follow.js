@@ -1,66 +1,63 @@
-import {
-db,
-auth
-}
-from "./firebase.js";
-
+import { auth, database } from "./firebase.js";
 
 import {
+    ref,
+    get,
+    update
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-addDoc,
+export async function toggleFollow(targetUid){
 
-collection,
+    const currentUser = auth.currentUser;
 
-serverTimestamp
+    if(!currentUser){
+        alert("Please login.");
+        return;
+    }
 
-}
+    if(currentUser.uid === targetUid){
+        return;
+    }
 
-from
+    const meRef =
+        ref(database, `users/${currentUser.uid}/following`);
 
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const targetRef =
+        ref(database, `users/${targetUid}/followers`);
 
+    const meSnap = await get(meRef);
+    const targetSnap = await get(targetRef);
 
+    const following =
+        meSnap.val() || {};
 
-export async function followUser(userId){
+    const followers =
+        targetSnap.val() || {};
 
+    if(following[targetUid]){
 
-const current =
-auth.currentUser;
+        delete following[targetUid];
+        delete followers[currentUser.uid];
 
+    }else{
 
-if(!current)return;
+        following[targetUid] = true;
+        followers[currentUser.uid] = true;
 
+    }
 
+    await update(
+        ref(database, `users/${currentUser.uid}`),
+        {
+            following
+        }
+    );
 
-await addDoc(
-
-collection(
-db,
-"followers"
-),
-
-{
-
-followerId:
-current.uid,
-
-
-followingId:
-userId,
-
-
-createdAt:
-serverTimestamp()
-
-}
-
-);
-
-
-
-alert(
-"Following 🚀"
-);
-
+    await update(
+        ref(database, `users/${targetUid}`),
+        {
+            followers
+        }
+    );
 
 }
