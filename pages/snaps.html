@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
 
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Snap X Snaps</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet"
+href="../style.css">
 
 </head>
 
-
 <body>
 
+<script type="module"
+src="../firebase/authGuard.js"></script>
 
-<div class="snaps-container">
+<div
+id="snapsFeed"
+class="snaps-feed">
 
+<div class="loading">
 
-<p>
 Loading Snaps...
-</p>
-
 
 </div>
 
-<script type="module" src="../firebase/authGuard.js"></script>
+</div>
 
-<script type="module"
-src="../firebase/snaps.js">
+<script
+type="module"
+src="../firebase/snapsFeed.js">
 </script>
-
 
 </body>
 
