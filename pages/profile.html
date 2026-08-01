@@ -12,33 +12,16 @@
 
 </head>
 
-
 <body>
 
 
 
-<div class="profile">
+</div>
 
-
-<img 
-id="avatar"
+<img
+id="photoPreview"
 class="avatar"
 src="../assets/default-avatar.png">
-
-
-
-<h1 id="profileName">
-Loading...
-</h1>
-
-
-
-<p id="bio">
-Loading...
-</p>
-
-
-
 
 <div class="stats">
 
@@ -50,8 +33,6 @@ Loading...
 Posts
 </div>
 
-
-
 <div>
 <b id="followers">
 0</b>
@@ -59,27 +40,12 @@ Posts
 Followers
 </div>
 
-
-
 <div>
-<b id="following">
+<b id="followinh">
 0</b>
 <br>
 Following
 </div>
-
-
-
-</div>
-
-
-
-<button id="editProfile">
-
-Edit Profile
-
-</button>
-
 
 
 <h2>
@@ -94,14 +60,6 @@ class="post-grid">
 
 </div>
 
-
-
-</div>
-
-<img
-id="photoPreview"
-class="avatar"
-src="../assets/default-avatar.png">
 
 <input
 id="displayName"
@@ -136,6 +94,7 @@ Save Profile
 src="../firebase/profile.js">
 </script>
 
+<script>
 document
     .getElementById("logoutBtn")
     .onclick = async () => {
