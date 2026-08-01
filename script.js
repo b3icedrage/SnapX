@@ -130,3 +130,24 @@ document.body.classList.toggle("light");
 };
 
 }
+
+const device =
+navigator.userAgent;
+
+
+if(
+/Android|iPhone/i.test(device)
+){
+
+document.body.classList.add(
+"mobile"
+);
+
+}
+else{
+
+document.body.classList.add(
+"desktop"
+);
+
+}
