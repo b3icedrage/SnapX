@@ -161,97 +161,20 @@ src="../firebase/feed.js">
 
 <!-- Upload System -->
 
-<script type="module">
+<script>
+
+const btn = document.getElementById("createBtn");
+
+console.log("Button:", btn);
 
 
-import { uploadMedia } from "../supabase/upload.js";
+btn.onclick = () => {
 
-
-
-const createBtn =
-document.getElementById("createBtn");
-
-
-
-console.log(
-"Snap X create button:",
-createBtn
-);
-
-
-
-
-
-createBtn.onclick = () => {
-
-
-
-const input =
-document.createElement("input");
-
-
-
-input.type = "file";
-
-
-input.accept =
-"image/*,video/*";
-
-
-
-
-input.onchange = async()=>{
-
-
-const file =
-input.files[0];
-
-
-
-if(!file) return;
-
-
-
-
-console.log(
-"Selected:",
-file.name
-);
-
-
-
-
-const url =
-await uploadMedia(file);
-
-
-
-
-if(url){
-
-
-alert(
-"Posted to Snap X 🚀"
-);
-
-
-
-}
+alert("Snap X button works!");
 
 };
-
-
-
-input.click();
-
-
-
-};
-
-
 
 </script>
-
 
 
 
