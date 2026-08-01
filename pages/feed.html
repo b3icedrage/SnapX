@@ -18,17 +18,12 @@
 
 <header class="topbar">
 
-<div class="logo">
-
 <img src="../assets/logo.svg" class="logo-img" alt="Snap X">
 
-</div>
 
-
-<a href="profile.html" class="profile-icon">
-👤
+<a href="profile.html">
+◎
 </a>
-
 
 </header>
 
@@ -38,41 +33,35 @@
 
 
 <div class="story">
-➕
++
 <br>
 <small>You</small>
 </div>
 
 
 <div class="story">
-👩
+🔥
 <br>
-<small>Anna</small>
+<small>Trending</small>
 </div>
 
 
 <div class="story">
-👨
+🎵
 <br>
-<small>James</small>
+<small>Music</small>
 </div>
 
 
 <div class="story">
-🧑
+🎮
 <br>
-<small>Chris</small>
-</div>
-
-
-<div class="story">
-👩‍🦰
-<br>
-<small>Sara</small>
+<small>Gaming</small>
 </div>
 
 
 </section>
+
 
 
 
@@ -89,6 +78,9 @@ Loading Snap X posts...
 
 
 
+
+<!-- Floating Create Button -->
+
 <button id="createBtn" class="create-btn">
 
 +
@@ -96,37 +88,58 @@ Loading Snap X posts...
 </button>
 
 
- 
+
+
 
 <nav class="bottom-nav">
 
+
 <a href="../index.html" class="nav-item">
+
 <span class="icon">⌂</span>
+
 <span>Home</span>
+
 </a>
+
 
 
 <a href="snaps.html" class="nav-item">
+
 <span class="icon">▶</span>
+
 <span>Snaps</span>
+
 </a>
+
 
 
 <a href="search.html" class="nav-item">
+
 <span class="icon">⌕</span>
+
 <span>Search</span>
+
 </a>
+
 
 
 <a href="notifications.html" class="nav-item">
+
 <span class="icon">♡</span>
+
 <span>Activity</span>
+
 </a>
 
 
+
 <a href="profile.html" class="nav-item">
+
 <span class="icon">◎</span>
+
 <span>Profile</span>
+
 </a>
 
 
@@ -134,150 +147,57 @@ Loading Snap X posts...
 
 
 
-<!-- Firebase Feed -->
 
-<script type="module" src="../firebase/feed.js"></script>
 
+<!-- Load Firebase Feed -->
 
-
-
-
-<!-- Supabase Upload -->
-
-<script type="module">
-
-
-import {
-
-uploadMedia
-
-} from "../supabase/upload.js";
-
-
-
-
-
-const uploadButton =
-document.getElementById("postBtn");
-
-
-
-
-
-console.log(
-"Snap X upload ready",
-uploadButton
-);
-
-
-
-
-
-uploadButton.onclick = () => {
-
-
-const input =
-document.createElement("input");
-
-
-
-input.type = "file";
-
-
-input.accept =
-"image/*,video/*";
-
-
-
-
-
-input.onchange = async () => {
-
-
-const file =
-input.files[0];
-
-
-
-if(!file){
-
-return;
-
-}
-
-
-
-
-console.log(
-"Selected file:",
-file.name
-);
-
-
-
-
-const url =
-await uploadMedia(file);
-
-
-
-
-
-if(url){
-
-
-alert(
-"Media uploaded 🚀"
-);
-
-
-console.log(
-"Media URL:",
-url
-);
-
-
-}
-
-
-
-};
-
-
-
-
-input.click();
-
-
-
-};
-
-
-
-
-
+<script type="module"
+src="../firebase/feed.js">
 </script>
 
+
+
+
+
+<!-- Upload System -->
+
 <script type="module">
+
 
 import { uploadMedia } from "../supabase/upload.js";
 
 
-const createButton =
-document.getElementById("createNav");
+
+const createBtn =
+document.getElementById("createBtn");
 
 
-createButton.onclick = () => {
+
+console.log(
+"Snap X create button:",
+createBtn
+);
+
+
+
+
+
+createBtn.onclick = () => {
+
 
 
 const input =
 document.createElement("input");
 
 
+
 input.type = "file";
+
 
 input.accept =
 "image/*,video/*";
+
+
 
 
 input.onchange = async()=>{
@@ -287,7 +207,10 @@ const file =
 input.files[0];
 
 
+
 if(!file) return;
+
+
 
 
 console.log(
@@ -296,80 +219,41 @@ file.name
 );
 
 
-const result =
-await uploadMedia(file);
-
-
-if(result){
-
-alert(
-"Posted to Snap X 🚀"
-);
-
-}
-
-
-};
-
-
-input.click();
-
-
-};
-
-
-</script>
-
-<script type="module">
-
-import { uploadMedia } from "../supabase/upload.js";
-
-
-const createBtn =
-document.getElementById("createBtn");
-
-
-createBtn.onclick = ()=>{
-
-
-const input =
-document.createElement("input");
-
-
-input.type="file";
-
-input.accept="image/*,video/*";
-
-
-input.onchange=async()=>{
-
-
-const file=input.files[0];
-
-
-if(!file) return;
 
 
 const url =
 await uploadMedia(file);
 
 
+
+
 if(url){
 
-alert("Uploaded to Snap X 🚀");
+
+alert(
+"Posted to Snap X 🚀"
+);
+
+
 
 }
 
 };
 
 
+
 input.click();
+
 
 
 };
 
 
+
 </script>
+
+
+
 
 
 </body>
