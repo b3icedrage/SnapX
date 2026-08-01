@@ -1,6 +1,5 @@
 import { auth } from "./firebase.js";
 
-
 import {
 onAuthStateChanged
 }
@@ -8,33 +7,36 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
+console.log("Snap X starting...");
+
 
 onAuthStateChanged(auth,(user)=>{
 
 
-setTimeout(()=>{
+console.log(
+"Auth check:",
+user
+);
+
 
 
 if(user){
 
 
-window.location.href =
-"pages/feed.html";
+window.location.replace(
+"pages/feed.html"
+);
+
+
+}else{
+
+
+window.location.replace(
+"pages/login.html"
+);
 
 
 }
-
-else{
-
-
-window.location.href =
-"pages/login.html";
-
-
-}
-
-
-},1500);
 
 
 
