@@ -1268,3 +1268,28 @@ body{
 /* ===========================
    END OF SNAP X v2.0 CSS
 =========================== */
+.comments{
+
+padding:15px;
+
+border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+.comment{
+
+padding:10px;
+
+margin-top:8px;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.05);
+
+}
+
+.comment b{
+
+color:#00d9ff;
+
+}

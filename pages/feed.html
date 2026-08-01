@@ -4,274 +4,340 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Snap X Feed</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="../style.css">
+<title>Snap X</title>
+
+<link
+rel="stylesheet"
+href="../style.css">
 
 </head>
 
-
 <body>
 
-<div class="main-content">
+<!-- ==========================
+     TOP BAR
+=========================== -->
+
 <header class="topbar">
 
-<img src="../assets/logo.svg" class="logo-img" alt="Snap X">
+<img
+src="../assets/logo.svg"
+class="logo-img"
+alt="Snap X">
 
+<a
+href="profile.html"
+class="profile-icon">
 
-<a href="profile.html">
-◎
+👤
+
 </a>
 
 </header>
 
-
+<!-- ==========================
+     STORIES
+=========================== -->
 
 <section class="stories">
 
-
 <div class="story">
-+
-<br>
+
+<div class="avatar">+</div>
+
 <small>You</small>
+
 </div>
 
-
 <div class="story">
-🔥
-<br>
+
+<div class="avatar">🔥</div>
+
 <small>Trending</small>
+
 </div>
 
-
 <div class="story">
-🎵
-<br>
+
+<div class="avatar">🎵</div>
+
 <small>Music</small>
-</div>
 
+</div>
 
 <div class="story">
-🎮
-<br>
+
+<div class="avatar">🎮</div>
+
 <small>Gaming</small>
+
 </div>
 
+<div class="story">
+
+<div class="avatar">⚽</div>
+
+<small>Sports</small>
+
+</div>
+
+<div class="story">
+
+<div class="avatar">🎬</div>
+
+<small>Movies</small>
+
+</div>
+
+<div class="story">
+
+<div class="avatar">😂</div>
+
+<small>Comedy</small>
+
+</div>
 
 </section>
 
+<!-- ==========================
+     FEED
+=========================== -->
 
+<main
+class="feed"
+id="feed">
 
+<div class="loading">
 
-
-<section class="feed">
-
-<p>
 Loading Snap X posts...
-</p>
 
+</div>
 
-</section>
+</main>
 
+<!-- ==========================
+     FLOATING CREATE BUTTON
+=========================== -->
 
-
-
-
-<!-- Floating Create Button -->
-
-<button id="createBtn" class="create-btn">
+<button
+id="createBtn"
+class="create-btn">
 
 +
 
 </button>
 
-
-
-
+<!-- ==========================
+     BOTTOM NAVIGATION
+=========================== -->
 
 <nav class="bottom-nav">
 
+<a
+href="feed.html"
+class="nav-item active">
 
-<a href="../index.html" class="nav-item">
+<span class="icon">
 
-<span class="icon">⌂</span>
+🏠
 
-<span>Home</span>
+</span>
 
-</a>
+<span>
 
+Home
 
-
-<a href="snaps.html" class="nav-item">
-
-<span class="icon">▶</span>
-
-<span>Snaps</span>
-
-</a>
-
-
-
-<a href="search.html" class="nav-item">
-
-<span class="icon">⌕</span>
-
-<span>Search</span>
+</span>
 
 </a>
 
+<a
+href="snaps.html"
+class="nav-item">
 
+<span class="icon">
 
-<a href="notifications.html" class="nav-item">
+▶️
 
-<span class="icon">♡</span>
+</span>
 
-<span>Activity</span>
+<span>
 
-</a>
+Snaps
 
-
-
-<a href="profile.html" class="nav-item">
-
-<span class="icon">◎</span>
-
-<span>Profile</span>
+</span>
 
 </a>
 
+<a
+href="search.html"
+class="nav-item">
+
+<span class="icon">
+
+🔍
+
+</span>
+
+<span>
+
+Search
+
+</span>
+
+</a>
+
+<a
+href="notifications.html"
+class="nav-item">
+
+<span class="icon">
+
+❤️
+
+</span>
+
+<span>
+
+Activity
+
+</span>
+
+</a>
+
+<a
+href="messages.html"
+class="nav-item">
+
+<span class="icon">
+
+💬
+
+</span>
+
+<span>
+
+Messages
+
+</span>
+
+</a>
 
 </nav>
-</div>
 
-<script type="module" src="../firebase/authGuard.js"></script>
+<!-- ==========================
+     AUTH GUARD
+=========================== -->
 
+<script
+type="module"
+src="../firebase/authGuard.js">
 
-<!-- Load Firebase Feed -->
-
-<script type="module"
-src="../firebase/feed.js">
 </script>
 
+<!-- ==========================
+     FEED
+=========================== -->
 
+<script
+type="module"
+src="../firebase/feed.js">
 
+</script>
 
-
-<!-- Upload System -->
+<!-- ==========================
+     UPLOAD SYSTEM
+=========================== -->
 
 <script type="module">
 
-import { uploadMedia } from "../supabase/upload.js";
+import { uploadPost } from "../firebase/uploadPost.js";
 
+const createBtn = document.getElementById("createBtn");
 
-const btn =
-document.getElementById("createBtn");
+createBtn.addEventListener("click", () => {
 
+    const picker = document.createElement("input");
 
-console.log("Snap X upload button:", btn);
+    picker.type = "file";
 
+    picker.accept = "image/*,video/*";
 
+    picker.click();
 
-btn.onclick = () => {
+    picker.onchange = async () => {
 
+        const file = picker.files[0];
 
-const input =
-document.createElement("input");
+        if (!file) return;
 
+        const caption =
+            prompt("Write a caption (optional):") || "";
 
-input.type = "file";
+        createBtn.disabled = true;
 
-input.accept = "image/*,video/*";
+        createBtn.innerHTML = "⏳";
 
+        try {
 
+            const success =
+                await uploadPost(file, caption);
 
-input.onchange = async () => {
+            if (success) {
 
+                createBtn.innerHTML = "✓";
 
-const file =
-input.files[0];
+                setTimeout(() => {
 
+                    createBtn.innerHTML = "+";
 
-if(!file){
+                }, 1000);
 
-console.log("No file selected");
+            }
 
-return;
+        }
 
-}
+        catch (error) {
 
+            console.error(error);
 
+            alert("Upload failed.");
 
-console.log(
-"Selected file:",
-file.name
-);
+            createBtn.innerHTML = "+";
 
+        }
 
+        finally {
 
-try {
+            createBtn.disabled = false;
 
+        }
 
-const url =
-await uploadMedia(file);
+    };
 
-
-
-console.log(
-"Upload result:",
-url
-);
-
-
-
-if(url){
-
-alert(
-"Uploaded successfully 🚀"
-);
-
-
-location.reload();
-
-}
-
-
-}
-
-catch(error){
-
-console.error(
-"Upload failed:",
-error
-);
-
-alert(
-"Upload error. Check console."
-);
-
-}
-
-
-};
-
-
-
-input.click();
-
-
-};
-
+});
 
 </script>
+
+<!-- ==========================
+     PAGE ANIMATIONS
+=========================== -->
 
 <script>
+
 window.addEventListener("load", () => {
-  document.body.classList.add("loaded");
+
+    document.body.classList.add("fade-in");
+
 });
+
 </script>
-      
+
 </body>
 
 </html>

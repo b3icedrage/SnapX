@@ -1,104 +1,60 @@
-import { db, auth } from "./firebase.js";
-
+import { database, auth } from "./firebase.js";
 
 import {
-collection,
-addDoc,
-query,
-where,
-getDocs,
-orderBy,
-serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    ref,
+    push,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+export async function addComment(postId, text) {
 
+    const user = auth.currentUser;
 
-export async function addComment(postId,text){
+    if (!user) {
+        alert("Please login.");
+        return;
+    }
 
+    if (!text.trim()) return;
 
-const user =
-auth.currentUser;
+    await push(ref(database, `posts/${postId}/comments`), {
 
+        uid: user.uid,
 
-if(!user){
-alert("Login first");
-return;
-}
+        username: user.email,
 
+        text,
 
+        createdAt: Date.now()
 
-await addDoc(
-collection(db,"comments"),
-{
-
-postId:postId,
-
-userId:user.uid,
-
-username:user.email,
-
-text:text,
-
-createdAt:
-serverTimestamp()
+    });
 
 }
 
-);
+export function watchComments(postId, container) {
 
+    onValue(ref(database, `posts/${postId}/comments`), snapshot => {
 
-alert("Comment added 💬");
+        const data = snapshot.val();
 
+        container.innerHTML = "";
 
-}
+        if (!data) return;
 
+        Object.values(data).forEach(comment => {
 
+            container.innerHTML += `
+                <div class="comment">
 
+                    <b>${comment.username}</b><br>
 
+                    ${comment.text}
 
-export async function loadComments(postId){
+                </div>
+            `;
 
+        });
 
-const q =
-query(
-
-collection(db,"comments"),
-
-where(
-"postId",
-"==",
-postId
-),
-
-orderBy(
-"createdAt",
-"asc"
-)
-
-);
-
-
-
-const snapshot =
-await getDocs(q);
-
-
-
-let comments=[];
-
-
-snapshot.forEach(doc=>{
-
-comments.push(
-doc.data()
-);
-
-});
-
-
-return comments;
-
+    });
 
 }

@@ -1,294 +1,122 @@
-import { db, auth } from "./firebase.js";
-
-
+import { likePost } from "./likes.js";
+import { database } from "./firebase.js";
 import {
-collection,
-getDocs,
-query,
-orderBy,
-doc,
-setDoc,
-getDoc,
-updateDoc,
-increment
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    addComment,
+    watchComments
+} from "./comments.js";
+import {
+    ref,
+    onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+const feed = document.getElementById("feed");
 
+const postsRef = ref(database, "posts");
 
-const feed =
-document.querySelector(".feed");
+onValue(postsRef, (snapshot) => {
 
+    const data = snapshot.val();
 
+    feed.innerHTML = "";
 
-async function loadFeed(){
+    if (!data) {
 
+        feed.innerHTML = `
+            <div class="empty-feed">
+                <h2>No posts yet</h2>
+                <p>Upload the first Snap 🚀</p>
+            </div>
+        `;
 
-const q =
-query(
-collection(db,"posts"),
-orderBy("createdAt","desc")
-);
+        return;
+    }
 
+    const posts = Object.entries(data)
+        .map(([id, post]) => ({
+            id,
+            ...post
+        }))
+        .sort((a, b) => b.createdAt - a.createdAt);
 
+    posts.forEach(post => {
 
-const snapshot =
-await getDocs(q);
+        const card = document.createElement("article");
+        card.className = "post fade-in";
 
+        const media = post.type === "video"
+            ? `
+                <video
+                    class="uploaded-media"
+                    src="${post.media}"
+                    controls
+                    playsinline
+                ></video>
+              `
+            : `
+                <img
+                    class="uploaded-media"
+                    src="${post.media}"
+                    alt="Snap X post"
+                >
+              `;
 
+        card.innerHTML = `
+            <div class="post-header">
 
-feed.innerHTML="";
+                <div class="post-user">
 
+                    <div class="post-avatar">
+                        ${post.username ? post.username.charAt(0).toUpperCase() : "U"}
+                    </div>
 
+                    <div>
 
-snapshot.forEach((item)=>{
+                        <div class="post-name">
+                            ${post.username || "Unknown"}
+                        </div>
 
+                        <div class="post-time">
+                            ${new Date(post.createdAt).toLocaleString()}
+                        </div>
 
-const post =
-item.data();
+                    </div>
 
+                </div>
 
-const id =
-item.id;
+            </div>
 
+            ${media}
 
+            <div class="post-content">
+                <p>${post.caption || ""}</p>
+            </div>
 
-feed.innerHTML += `
+            <div class="actions">
 
+                <button
+class="like-btn"
+data-id="${post.id}">
 
-<div class="post"
-data-id="${id}">
-
-
-${
-
-post.type?.startsWith("video")
-
-?
-
-`
-<video
-class="post-media"
-src="${post.media}"
-controls>
-</video>
-`
-
-:
-
-`
-<img
-class="post-media"
-src="${post.media}">
-`
-
-}
-
-
-
-<div class="post-info">
-
-<h3>
-${post.username}
-</h3>
-
-
-<p>
-${post.caption || ""}
-</p>
-
-
-</div>
-
-
-
-<div class="actions">
-
-
-<button class="like"
-data-id="${id}">
-
-❤️
-<span>
-${post.likes || 0}
-</span>
+❤️ ${post.likes || 0}
 
 </button>
 
+                <button>💬 ${post.comments || 0}</button>
 
+                <button>↗️ Share</button>
 
-<button class="comment-btn"
-data-id="${id}">
-💬
-</button>
+            </div>
+        `;
 
+        feed.appendChild(card);
+const likeBtn = card.querySelector(".like-btn");
 
-<button>
-📤
-</button>
+likeBtn.onclick = () => {
 
-
-</div>
-
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-
-addLikeEvents();
-
-
-}
-
-
-
-function addLikeEvents(){
-
-
-document
-.querySelectorAll(".like")
-.forEach(button=>{
-
-
-button.onclick=async()=>{
-
-
-const postId =
-button.dataset.id;
-
-
-
-const postRef =
-doc(db,"posts",postId);
-
-
-
-await updateDoc(
-postRef,
-{
-
-likes:
-increment(1)
-
-}
-);
-
-
-
-let count =
-button.querySelector("span");
-
-
-count.innerHTML =
-Number(count.innerHTML)+1;
-
-
-
-button.classList.add(
-"liked"
-);
-
-
+    likePost(post.id);
 
 };
 
-
-
-});
-
-
-
-}
-
-document.addEventListener(
-"dblclick",
-(e)=>{
-
-
-const post =
-e.target.closest(".post");
-
-
-if(!post) return;
-
-
-
-const heart =
-document.createElement("div");
-
-
-heart.className="big-heart";
-
-
-heart.innerHTML="❤️";
-
-
-post.appendChild(heart);
-
-
-
-setTimeout(()=>{
-
-heart.remove();
-
-},800);
-
-
-});
-
-loadFeed();
-
-import {
-addComment
-}
-from "./comments.js";
-
-
-
-document
-.addEventListener(
-"click",
-(e)=>{
-
-
-if(
-e.target.classList.contains(
-"comment-btn"
-)
-){
-
-
-let postId =
-e.target.dataset.id;
-
-
-
-let text =
-prompt(
-"Write a comment"
-);
-
-
-
-if(text){
-
-addComment(
-postId,
-text
-);
-
-}
-
-
-}
-
+    });
 
 });

@@ -1,43 +1,29 @@
-import { db, auth } from "./firebase.js";
-
+import { auth, database } from "./firebase.js";
 
 import {
-collection,
-addDoc,
-serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  ref,
+  push,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+export async function createPost(mediaUrl, type, caption = "") {
 
-export async function createPost(text){
+  const user = auth.currentUser;
 
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
 
-const user = auth.currentUser;
+  await push(ref(database, "posts"), {
+    uid: user.uid,
+    username: user.email,
+    media: mediaUrl,
+    type: type,
+    caption: caption,
+    likes: 0,
+    createdAt: Date.now()
+  });
 
-
-await addDoc(
-
-collection(db,"posts"),
-
-{
-
-username:
-user.email,
-
-content:text,
-
-likes:0,
-
-createdAt:
-serverTimestamp()
-
-}
-
-);
-
-
-alert("Posted 🚀");
-
-
+  alert("Posted successfully 🚀");
 }
