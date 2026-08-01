@@ -7,6 +7,7 @@ import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyCUHqqIqzu73SlP5uHR16kCbwQKeFRt7aY",
   authDomain: "snap-x-c737f.firebaseapp.com",
+  databaseURL: "https://console.firebase.google.com/u/0/project/snap-x-c737f/database/snap-x-c737f-default-rtdb/data/~2F"
   projectId: "snap-x-c737f",
   storageBucket: "snap-x-c737f.firebasestorage.app",
   messagingSenderId: "327958989341",

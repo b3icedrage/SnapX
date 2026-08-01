@@ -1,4 +1,8 @@
-import { auth, db } from "./firebase.js";
+import {
+auth,
+database
+}
+from "./firebase.js";
 
 
 import {
@@ -14,15 +18,14 @@ from
 
 import {
 
-doc,
-
-setDoc
+ref,
+set
 
 }
 
 from
 
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 
@@ -48,37 +51,34 @@ try{
 
 
 const result =
-
 await createUserWithEmailAndPassword(
-
 auth,
-
 email,
-
 password
-
 );
 
 
 
-await setDoc(
+await set(
 
-doc(
-db,
-"users",
-result.user.uid
+ref(
+database,
+"users/" + result.user.uid
 ),
 
 {
 
-username,
+username:username,
 
-email,
+email:email,
 
-bio:
-"New Snap X creator 🚀",
+bio:"New Snap X creator 🚀",
 
-avatar:""
+avatar:"",
+
+followers:0,
+
+following:0
 
 }
 
