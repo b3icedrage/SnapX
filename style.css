@@ -1517,9 +1517,15 @@ font-weight:bold;
 
 height:100vh;
 
-overflow-y:scroll;
+overflow-y:auto;
 
 scroll-snap-type:y mandatory;
+
+scroll-behavior:smooth;
+
+overscroll-behavior-y:contain;
+
+-webkit-overflow-scrolling:touch;
 
 background:black;
 
@@ -1535,9 +1541,11 @@ width:100%;
 
 scroll-snap-align:start;
 
-background:black;
+scroll-snap-stop:always;
 
 overflow:hidden;
+
+background:black;
 
 }
 
@@ -1550,6 +1558,8 @@ height:100%;
 object-fit:cover;
 
 background:black;
+
+touch-action:pan-y;
 
 }
 
@@ -1649,5 +1659,54 @@ height:100vh;
 font-size:22px;
 
 color:white;
+
+}
+.snap-user-row{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+.snap-avatar{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:2px solid white;
+
+cursor:pointer;
+
+}
+
+.snap-actions button{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+gap:4px;
+
+font-size:22px;
+
+font-weight:bold;
+
+}
+
+.snap-actions span{
+
+font-size:13px;
 
 }
