@@ -18,6 +18,39 @@ body{
     background:#111827;
 }
 
+/* Splash screen */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ff0050, #7c3aed, #00e5ff);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 9999;
+
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.splash.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Feed animation */
+
+body {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
 #checking{
 
 position:fixed;

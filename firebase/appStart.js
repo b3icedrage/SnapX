@@ -3,12 +3,29 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+const splash = document.querySelector(".splash");
+
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // A user session exists on this device
-    window.location.replace("pages/feed.html");
+
+  if (splash) {
+    splash.classList.add("fade-out");
+
+    setTimeout(() => {
+      if (user) {
+        window.location.replace("pages/feed.html");
+      } else {
+        window.location.replace("pages/login.html");
+      }
+    }, 600);
+
   } else {
-    // No signed-in user on this device
-    window.location.replace("pages/login.html");
+
+    if (user) {
+      window.location.replace("pages/feed.html");
+    } else {
+      window.location.replace("pages/login.html");
+    }
+
   }
+
 });
