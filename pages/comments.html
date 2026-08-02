@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Comments</title>
+
+<link rel="stylesheet"
+href="../style.css">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+<a href="javascript:history.back()">
+
+⬅️
+
+</a>
+
+<h2>
+
+Comments
+
+</h2>
+
+<div></div>
+
+</header>
+
+<main
+id="commentsList"
+class="comments-list">
+
+<p>
+
+Loading comments...
+
+</p>
+
+</main>
+
+<div class="comment-box">
+
+<input
+id="commentInput"
+type="text"
+placeholder="Write a comment...">
+
+<button
+id="sendComment">
+
+Send
+
+</button>
+
+</div>
+
+<script
+type="module"
+src="../firebase/authGuard.js">
+</script>
+
+<script
+type="module"
+src="../firebase/comments.js">
+</script>
+
+</body>
+
+</html>
