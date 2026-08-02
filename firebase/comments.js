@@ -194,21 +194,34 @@ sendBtn.onclick = async () => {
 
     if (!text) return;
 
-    const userPhoto =
-auth.currentUser.photoURL ||
-"../assets/default-avatar.png";
+    const userRef = ref(database, "users/" + user.uid);
 
-await push(commentsRef,{
+const userSnap = await get(userRef);
 
-uid:user.uid,
+let profile = {};
 
-username:user.email,
+if (userSnap.exists()) {
 
-photo:userPhoto,
+    profile = userSnap.val();
 
-text,
+}
 
-createdAt:Date.now()
+await push(commentsRef, {
+
+    uid: user.uid,
+
+    username:
+        profile.displayName ||
+        user.email,
+
+    photo:
+        profile.photo ||
+        "../assets/default-avatar.png",
+
+    text,
+
+    createdAt:
+        Date.now()
 
 });
 
