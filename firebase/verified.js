@@ -27,9 +27,8 @@ window.pay = function (plan, price) {
 
         email: user.email,
 
-        amount: Math.round(price * 100), // cents/smallest currency unit
-
-        currency: "USD",
+        currency: "KES",
+amount: amountInKes * 100,
 
         metadata: {
             uid: user.uid,
