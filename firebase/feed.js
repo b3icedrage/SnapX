@@ -1,5 +1,5 @@
 import { openProfile } from "./openProfile.js";
-import { likePost } from "./likes.js";
+import { toggleLike } from "./likes.js";
 import { database } from "./firebase.js";
 
 import {
@@ -12,6 +12,7 @@ const feed = document.getElementById("feed");
 const postsRef = ref(database, "posts");
 
 onValue(postsRef, (snapshot) => {
+console.log("Feed snapshot:", snapshot.val());
 
     feed.innerHTML = "";
 
@@ -141,7 +142,7 @@ onValue(postsRef, (snapshot) => {
 
         card.querySelector(".like-btn").onclick = () => {
 
-            likePost(post.id);
+            toggleLike(post.id);
 
         };
 
