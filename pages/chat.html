@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Chat</title>
+
+<link rel="stylesheet"
+href="../style.css">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+<a href="messages.html">←</a>
+
+<div id="chatUser">
+
+Loading...
+
+</div>
+
+</header>
+
+<div
+id="chatMessages"
+class="chat-messages">
+
+<div class="loading">
+
+Loading messages...
+
+</div>
+
+</div>
+
+<div class="chat-input">
+
+<input
+id="messageInput"
+type="text"
+placeholder="Type a message...">
+
+<button
+id="sendBtn">
+
+➤
+
+</button>
+
+</div>
+
+<script
+type="module"
+src="../firebase/authGuard.js">
+</script>
+
+<script
+type="module"
+src="../firebase/chat.js">
+</script>
+
+</body>
+
+</html>

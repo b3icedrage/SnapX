@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>New Chat</title>
+
+<link rel="stylesheet"
+href="../style.css">
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+<a href="messages.html">←</a>
+
+<h2>New Chat</h2>
+
+</header>
+
+<div class="search-box">
+
+<input
+id="searchUsers"
+type="text"
+placeholder="Search users...">
+
+</div>
+
+<div
+id="usersList"
+class="messages-list">
+
+<div class="loading">
+
+Loading users...
+
+</div>
+
+</div>
+
+<script
+type="module"
+src="../firebase/authGuard.js">
+</script>
+
+<script
+type="module"
+src="../firebase/newChat.js">
+</script>
+
+</body>
+
+</html>
