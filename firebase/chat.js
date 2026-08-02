@@ -21,6 +21,7 @@ const sendBtn = document.getElementById("sendBtn");
 const chatUser = document.getElementById("chatUser");
 
 let currentUser = null;
+let otherUser = null;
 
 onAuthStateChanged(auth, async (user) => {
 
@@ -31,13 +32,13 @@ onAuthStateChanged(auth, async (user) => {
     if (!chatId) {
 
         chatMessages.innerHTML =
-        "<p>Conversation not found.</p>";
+            "<p>Conversation not found.</p>";
 
         return;
 
     }
 
-    // Load chat header
+    // Load chat information
     const chatSnap =
         await get(ref(database, "chats/" + chatId));
 
@@ -52,14 +53,22 @@ onAuthStateChanged(auth, async (user) => {
         if (otherUid) {
 
             const profileSnap =
-                await get(ref(database, "users/" + otherUid));
+                await get(
+                    ref(database, "users/" + otherUid)
+                );
 
             if (profileSnap.exists()) {
 
-                const profile = profileSnap.val();
+                otherUser = profileSnap.val();
 
                 chatUser.textContent =
-                    profile.displayName || "Unknown";
+                    otherUser.displayName ||
+                    "Unknown User";
+
+            } else {
+
+                chatUser.textContent =
+                    "Unknown User";
 
             }
 
@@ -75,14 +84,14 @@ function loadMessages() {
 
     onValue(
         ref(database, "messages/" + chatId),
-        snapshot => {
+        async (snapshot) => {
 
             chatMessages.innerHTML = "";
 
             if (!snapshot.exists()) {
 
                 chatMessages.innerHTML =
-                "<p>No messages yet.</p>";
+                    "<p>No messages yet.</p>";
 
                 return;
 
@@ -104,52 +113,70 @@ function loadMessages() {
 
             messages.sort(
                 (a, b) =>
-                (a.createdAt || 0) -
-                (b.createdAt || 0)
+                    (a.createdAt || 0) -
+                    (b.createdAt || 0)
             );
 
-            messages.forEach(message => {
+            for (const message of messages) {
+
+                // Mark received messages as read
+                if (
+                    message.sender !== currentUser.uid &&
+                    !message.seen
+                ) {
+
+                    await update(
+                        ref(
+                            database,
+                            "messages/" +
+                            chatId +
+                            "/" +
+                            message.id
+                        ),
+                        {
+                            seen: true
+                        }
+                    );
+
+                }
 
                 const row =
-document.createElement("div");
+                    document.createElement("div");
 
-row.className =
-message.sender===currentUser.uid
-? "chat-row sent-row"
-: "chat-row received-row";
+                row.className =
+                    message.sender === currentUser.uid
+                        ? "chat-row sent-row"
+                        : "chat-row received-row";
 
-const bubble =
-document.createElement("div");
+                // Avatar
+                if (message.sender !== currentUser.uid) {
 
-bubble.className =
-"message " +
-(message.sender===currentUser.uid
-? "sent"
-: "received");
+                    const avatar =
+                        document.createElement("img");
+
+                    avatar.className =
+                        "chat-avatar";
+
+                    avatar.src =
+                        otherUser?.photo ||
+                        "../assets/default-avatar.png";
+
+                    row.appendChild(avatar);
+
+                }
+
+                const bubble =
+                    document.createElement("div");
 
                 bubble.className =
                     "message " +
-
-                    (message.sender === currentUser.uid
-                        ? "sent"
-                        : "received");
+                    (
+                        message.sender === currentUser.uid
+                            ? "sent"
+                            : "received"
+                    );
 
                 bubble.innerHTML = `
-if(message.sender!==currentUser.uid){
-
-const avatar=document.createElement("img");
-
-avatar.className="chat-avatar";
-
-avatar.src="../assets/default-avatar.png";
-
-row.appendChild(avatar);
-
-}
-
-row.appendChild(bubble);
-
-chatMessages.appendChild(row);
 
 <div class="message-text">
 
@@ -164,13 +191,27 @@ hour:"2-digit",
 minute:"2-digit"
 })}
 
+${
+message.sender===currentUser.uid
+?
+`<span class="read-status">
+
+${message.seen ? "✓✓" : "✓"}
+
+</span>`
+:
+""
+}
+
 </div>
 
 `;
 
-chatMessages.appendChild(bubble);
+                row.appendChild(bubble);
 
-            });
+                chatMessages.appendChild(row);
+
+            }
 
             chatMessages.scrollTop =
                 chatMessages.scrollHeight;
@@ -182,6 +223,8 @@ chatMessages.appendChild(bubble);
 }
 
 sendBtn.onclick = async () => {
+
+    if (!currentUser) return;
 
     const text =
         messageInput.value.trim();
@@ -195,12 +238,16 @@ sendBtn.onclick = async () => {
             sender:
                 currentUser.uid,
 
-            text,
+            text:
+
+                text,
 
             createdAt:
+
                 Date.now(),
 
             seen:
+
                 false
 
         }
@@ -212,9 +259,11 @@ sendBtn.onclick = async () => {
         {
 
             lastMessage:
+
                 text,
 
             updatedAt:
+
                 Date.now()
 
         }
@@ -228,6 +277,8 @@ sendBtn.onclick = async () => {
 messageInput.addEventListener("keydown", e => {
 
     if (e.key === "Enter") {
+
+        e.preventDefault();
 
         sendBtn.click();
 

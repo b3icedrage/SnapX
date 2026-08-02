@@ -2146,3 +2146,29 @@ border-radius:50%;
 object-fit:cover;
 
 }
+.read-status{
+
+margin-left:6px;
+
+font-size:12px;
+
+font-weight:bold;
+
+color:#00e5ff;
+
+}
+.nav-icon{
+    width:24px;
+    height:24px;
+    display:block;
+    margin:0 auto 4px;
+    transition:.25s;
+}
+
+.nav-item.active .nav-icon{
+    transform:scale(1.15);
+}
+
+.nav-item:hover .nav-icon{
+    transform:translateY(-3px);
+}
