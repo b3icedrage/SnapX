@@ -5,9 +5,24 @@ import {
     update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+/* ==========================================
+   Paystack Public Key
+========================================== */
+
 const PAYSTACK_PUBLIC_KEY = "pk_test_44b084de7dd0919ef364a3dbff381e3c4b9d164c";
 
-window.pay = function (plan, price) {
+/* ==========================================
+   USD → KES Conversion
+   Update this whenever you change pricing.
+========================================== */
+
+const USD_TO_KES = 130;
+
+/* ==========================================
+   Open Paystack Payment
+========================================== */
+
+window.pay = function (plan, usdPrice) {
 
     const user = auth.currentUser;
 
@@ -17,9 +32,11 @@ window.pay = function (plan, price) {
     }
 
     if (!user.email) {
-        alert("Your account needs an email address to use Paystack.");
+        alert("Your account must have an email address.");
         return;
     }
+
+    const amountInKes = Math.round(usdPrice * USD_TO_KES);
 
     const handler = PaystackPop.setup({
 
@@ -27,20 +44,32 @@ window.pay = function (plan, price) {
 
         email: user.email,
 
+        amount: amountInKes * 100,
+
         currency: "KES",
-amount: amountInKes * 100,
 
         metadata: {
+
             uid: user.uid,
+
             username: user.displayName || "",
-            plan: plan
+
+            plan: plan,
+
+            usdPrice: usdPrice,
+
+            amountKES: amountInKes
+
         },
 
         callback: function (response) {
 
-            alert("Payment successful!");
+            console.log("Payment Reference:", response.reference);
 
-            saveVerified(plan);
+            saveVerified(
+                plan,
+                response.reference
+            );
 
         },
 
@@ -56,7 +85,11 @@ amount: amountInKes * 100,
 
 };
 
-function saveVerified(plan) {
+/* ==========================================
+   Save Verification
+========================================== */
+
+function saveVerified(plan, paymentReference) {
 
     const user = auth.currentUser;
 
@@ -79,21 +112,55 @@ function saveVerified(plan) {
         case "1year":
             months = 12;
             break;
+
     }
 
-    const expires =
-        now + (months * 30 * 24 * 60 * 60 * 1000);
+    const verifiedUntil =
+        now +
+        (
+            months *
+            30 *
+            24 *
+            60 *
+            60 *
+            1000
+        );
 
-    update(ref(database, "users/" + user.uid), {
+    update(
 
-        verified: true,
-        verifiedPlan: plan,
-        verifiedSince: now,
-        verifiedUntil: expires
+        ref(database, "users/" + user.uid),
 
-    }).then(() => {
+        {
 
-        alert("🎉 You are now Snap Verified!");
+            verified: true,
+
+            verifiedPlan: plan,
+
+            verifiedSince: now,
+
+            verifiedUntil: verifiedUntil,
+
+            paymentReference: paymentReference,
+
+            verifiedBadge: true
+
+        }
+
+    )
+
+    .then(() => {
+
+        alert("🎉 Congratulations!");
+
+        alert("Your Snap Verified badge is now active.");
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Unable to activate verification.");
 
     });
 
