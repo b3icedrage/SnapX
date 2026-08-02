@@ -46,7 +46,13 @@ onValue(commentsRef, (snapshot) => {
 
     snapshot.forEach(child => {
 
-        comments.push(child.val());
+         comments.push({
+
+id:child.key,
+
+...child.val()
+
+});
 
     });
 
@@ -60,27 +66,113 @@ onValue(commentsRef, (snapshot) => {
 
         item.innerHTML = `
 
-            <div class="comment-name">
+<div class="comment-header">
 
-                ${comment.username || "Unknown"}
+<img
+class="comment-avatar"
+src="${comment.photo || "../assets/default-avatar.png"}">
 
-            </div>
+<div class="comment-info">
 
-            <div class="comment-text">
+<div class="comment-name">
 
-                ${comment.text}
+${comment.username || "Unknown"}
 
-            </div>
+</div>
 
-            <div class="comment-time">
+<div class="comment-time">
 
-                ${new Date(comment.createdAt).toLocaleString()}
+${new Date(comment.createdAt).toLocaleString()}
 
-            </div>
+</div>
 
-        `;
+</div>
+
+</div>
+
+<div class="comment-text">
+
+${comment.text}
+
+</div>
+
+<div class="comment-actions">
+
+<button
+class="comment-like">
+
+❤️ 0
+
+</button>
+
+${comment.uid===auth.currentUser?.uid?`
+
+<button
+class="delete-comment">
+
+🗑 Delete
+
+</button>
+
+`:""}
+
+</div>
+
+`;
 
         commentsList.appendChild(item);
+const deleteBtn =
+item.querySelector(".delete-comment");
+
+if(deleteBtn){
+
+deleteBtn.onclick=async()=>{
+
+const ok=
+confirm("Delete this comment?");
+
+if(!ok) return;
+
+const {
+remove
+}=await import(
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"
+);
+
+await remove(
+
+ref(
+database,
+`comments/${postId}/${comment.id}`
+)
+
+);
+
+const postRef=
+ref(database,"posts/"+postId);
+
+const snap=
+await get(postRef);
+
+if(snap.exists()){
+
+const post=snap.val();
+
+await update(postRef,{
+
+comments:
+Math.max(
+0,
+(post.comments||1)-1
+)
+
+});
+
+}
+
+};
+
+}
 
     });
 
@@ -102,7 +194,23 @@ sendBtn.onclick = async () => {
 
     if (!text) return;
 
-    await push(commentsRef, {
+    const userPhoto =
+auth.currentUser.photoURL ||
+"../assets/default-avatar.png";
+
+await push(commentsRef,{
+
+uid:user.uid,
+
+username:user.email,
+
+photo:userPhoto,
+
+text,
+
+createdAt:Date.now()
+
+});
 
         uid: user.uid,
 
