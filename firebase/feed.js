@@ -54,6 +54,15 @@ onValue(ref(database, "posts"), snapshot => {
 
     );
 
+const skeleton =
+document.getElementById("skeletonFeed");
+
+if(skeleton){
+
+skeleton.remove();
+
+}
+
     loadMorePosts();
 
 });
