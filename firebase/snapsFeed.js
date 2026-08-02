@@ -208,11 +208,28 @@ data-id="${post.id}">
 
     videoElements.forEach(video => {
 
-        video.onclick = () => {
+    video.onclick = () => {
+
+        if (video.muted) {
+
+            // Mute all other videos
+            videoElements.forEach(v => {
+
+                v.muted = true;
+
+            });
+
+            // Unmute the selected video
+            video.muted = false;
+            video.volume = 1;
+
+            video.play().catch(console.error);
+
+        } else {
 
             if (video.paused) {
 
-                video.play();
+                video.play().catch(console.error);
 
             } else {
 
@@ -220,9 +237,11 @@ data-id="${post.id}">
 
             }
 
-        };
+        }
 
-    });
+    };
+
+});
 
     /* -----------------------------
        Open public profile
