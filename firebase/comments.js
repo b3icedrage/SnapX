@@ -225,16 +225,6 @@ await push(commentsRef, {
 
 });
 
-        uid: user.uid,
-
-        username: user.email,
-
-        text,
-
-        createdAt: Date.now()
-
-    });
-
     // Update comment count on the post
     const postRef = ref(database, "posts/" + postId);
 
