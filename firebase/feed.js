@@ -9,31 +9,34 @@ import {
 
 const feed = document.getElementById("feed");
 
-const postsRef = ref(database, "posts");
+let allPosts = [];
+let rendered = 0;
 
-onValue(postsRef, (snapshot) => {
-console.log("Feed snapshot:", snapshot.val());
+const POSTS_PER_PAGE = 10;
+
+onValue(ref(database, "posts"), snapshot => {
+
+    allPosts = [];
+    rendered = 0;
 
     feed.innerHTML = "";
 
     if (!snapshot.exists()) {
 
         feed.innerHTML = `
-            <div class="empty-feed">
-                <h2>No posts yet</h2>
-                <p>Upload the first Snap 🚀</p>
-            </div>
+        <div class="empty-feed">
+            <h2>No posts yet</h2>
+            <p>Upload the first Snap 🚀</p>
+        </div>
         `;
 
         return;
 
     }
 
-    const posts = [];
-
     snapshot.forEach(child => {
 
-        posts.push({
+        allPosts.push({
 
             id: child.key,
 
@@ -43,151 +46,202 @@ console.log("Feed snapshot:", snapshot.val());
 
     });
 
-    posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    allPosts.sort((a, b) =>
 
-    posts.forEach(post => {
+        (b.createdAt || 0) -
 
-        const card = document.createElement("article");
+        (a.createdAt || 0)
 
-        card.className = "post fade-in";
+    );
 
-        const media = post.type === "video"
+    loadMorePosts();
 
-            ? `
-                <video
-                    class="uploaded-media"
-                    src="${post.media}"
-                    controls
-                    playsinline>
-                </video>
-            `
+});
 
-            : `
-                <img
-                    class="uploaded-media"
-                    src="${post.media}"
-                    alt="Snap X Post">
-            `;
+function loadMorePosts() {
 
-        card.innerHTML = `
+    const end = Math.min(
 
-            <div class="post-header">
+        rendered + POSTS_PER_PAGE,
 
-                <div class="post-user">
+        allPosts.length
 
-                    <img
-                        class="mini-avatar profile-link"
-                        data-uid="${post.uid}"
-                        src="${post.photo || "../assets/default-avatar.png"}"
-                        alt="Avatar">
+    );
 
-                    <div>
+    for (let i = rendered; i < end; i++) {
 
-                        <div
-                            class="post-name profile-link"
-                            data-uid="${post.uid}">
+        renderPost(allPosts[i]);
 
-                            ${post.username || "Unknown"}
+    }
 
-                        </div>
+    rendered = end;
 
-                        <div class="post-time">
+}
 
-                            ${new Date(post.createdAt || Date.now()).toLocaleString()}
+function renderPost(post) {
 
-                        </div>
+    const card = document.createElement("article");
 
-                    </div>
+    card.className = "post fade-in";
 
-                </div>
+    const media =
 
-            </div>
+        post.type === "video"
 
-            ${media}
+        ?
 
-            <div class="post-content">
+        `<video
+            class="uploaded-media"
+            src="${post.media}"
+            controls
+            playsinline
+            preload="metadata">
+        </video>`
 
-                <p>${post.caption || ""}</p>
+        :
 
-            </div>
+        `<img
+            class="uploaded-media"
+            src="${post.media}"
+            loading="lazy">`;
 
-            <div class="actions">
+    card.innerHTML = `
 
-                <button
-                    class="like-btn"
-                    data-id="${post.id}">
+<div class="post-header">
 
-                    ❤️ ${post.likes || 0}
+<div class="post-user">
 
-                </button>
+<img
+class="mini-avatar profile-link"
+data-uid="${post.uid}"
+src="${post.photo || "../assets/default-avatar.png"}">
 
-                <button>
+<div>
 
-                    💬 ${post.comments || 0}
+<div
+class="post-name profile-link"
+data-uid="${post.uid}">
 
-                </button>
+${post.username}
 
-                <button
-                    class="share-btn">
+</div>
 
-                    ↗️ Share
+<div class="post-time">
 
-                </button>
+${new Date(post.createdAt).toLocaleString()}
 
-            </div>
+</div>
 
-        `;
+</div>
 
-        feed.appendChild(card);
+</div>
 
-        card.querySelector(".like-btn").onclick = () => {
+</div>
 
-            toggleLike(post.id);
+${media}
 
-        };
+<div class="post-content">
 
-        card.querySelector(".share-btn").onclick = async () => {
+<p>${post.caption || ""}</p>
 
-            if (navigator.share) {
+</div>
 
-                try {
+<div class="actions">
 
-                    await navigator.share({
+<button
+class="like-btn"
+data-id="${post.id}">
 
-                        title: "Snap X",
+❤️ ${post.likes || 0}
 
-                        text: post.caption || "Check out this Snap!",
+</button>
 
-                        url: post.media
+<button
+class="comment-btn"
+data-id="${post.id}">
 
-                    });
+💬 ${post.comments || 0}
 
-                } catch (e) {
+</button>
 
-                    console.log(e);
+<button
+class="share-btn">
 
-                }
+Share
 
-            } else {
+</button>
 
-                navigator.clipboard.writeText(post.media);
+</div>
 
-                alert("Link copied!");
+`;
 
-            }
+    feed.appendChild(card);
 
-        };
+    card.querySelector(".like-btn").onclick = () => {
 
-        card.querySelectorAll(".profile-link").forEach(item => {
+        toggleLike(post.id);
 
-            item.onclick = () => {
+    };
 
-                openProfile(item.dataset.uid);
+    card.querySelector(".comment-btn").onclick = () => {
 
-            };
+        window.location.href =
+        `comments.html?post=${post.id}`;
 
-        });
+    };
+
+    card.querySelector(".share-btn").onclick = async () => {
+
+        if (navigator.share) {
+
+            try {
+
+                await navigator.share({
+
+                    title: "Snap X",
+
+                    text: post.caption,
+
+                    url: post.media
+
+                });
+
+            } catch {}
+
+        }
+
+    };
+
+    card.querySelectorAll(".profile-link").forEach(item => {
+
+        item.onclick = () =>
+
+            openProfile(item.dataset.uid);
 
     });
+
+}
+
+window.addEventListener("scroll", () => {
+
+    if (
+
+        window.innerHeight +
+
+        window.scrollY
+
+        >=
+
+        document.body.offsetHeight - 500
+
+    ) {
+
+        if (rendered < allPosts.length) {
+
+            loadMorePosts();
+
+        }
+
+    }
 
 });
