@@ -1,5 +1,11 @@
 import { auth, database } from "./firebase.js";
-import { ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+import {
+    ref,
+    push,
+    get
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
 import { uploadMedia } from "../supabase/upload.js";
 
 export async function uploadPost(file, caption = "") {
@@ -7,49 +13,76 @@ export async function uploadPost(file, caption = "") {
     const user = auth.currentUser;
 
     if (!user) {
+
         alert("Please login first.");
+
         return false;
+
     }
 
-    // Upload media to Supabase Storage
+    // Upload image/video to Supabase
     const mediaUrl = await uploadMedia(file);
 
     if (!mediaUrl) {
+
         alert("Upload failed.");
+
         return false;
+
     }
 
-    const type = file.type.startsWith("video/")
+    // Load user's profile from Firebase
+    let displayName = user.email;
+    let photo = "../assets/default-avatar.png";
+
+    const profileSnap = await get(
+        ref(database, "users/" + user.uid)
+    );
+
+    if (profileSnap.exists()) {
+
+        const profile = profileSnap.val();
+
+        displayName =
+            profile.displayName ||
+            user.email;
+
+        photo =
+            profile.photo ||
+            "../assets/default-avatar.png";
+
+    }
+
+    const type =
+        file.type.startsWith("video/")
         ? "video"
         : "image";
 
-    // Save post metadata in Firebase Realtime Database
-    await push(ref(database, "posts"), {
+    await push(
+        ref(database, "posts"),
+        {
 
-        uid: user.uid,
+            uid: user.uid,
 
-        username:
-            user.email,
+            username: displayName,
 
-        caption:
-            caption,
+            photo: photo,
 
-        media:
-            mediaUrl,
+            caption: caption,
 
-        type:
-            type,
+            media: mediaUrl,
 
-        likes:
-            0,
+            type: type,
 
-        comments:
-            0,
+            likes: 0,
 
-        createdAt:
-            Date.now()
+            comments: 0,
 
-    });
+            createdAt: Date.now()
+
+        }
+    );
 
     return true;
+
 }
