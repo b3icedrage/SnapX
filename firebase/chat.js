@@ -110,8 +110,22 @@ function loadMessages() {
 
             messages.forEach(message => {
 
-                const bubble =
-                    document.createElement("div");
+                const row =
+document.createElement("div");
+
+row.className =
+message.sender===currentUser.uid
+? "chat-row sent-row"
+: "chat-row received-row";
+
+const bubble =
+document.createElement("div");
+
+bubble.className =
+"message " +
+(message.sender===currentUser.uid
+? "sent"
+: "received");
 
                 bubble.className =
                     "message " +
@@ -120,10 +134,41 @@ function loadMessages() {
                         ? "sent"
                         : "received");
 
-                bubble.textContent =
-                    message.text;
+                bubble.innerHTML = `
+if(message.sender!==currentUser.uid){
 
-                chatMessages.appendChild(bubble);
+const avatar=document.createElement("img");
+
+avatar.className="chat-avatar";
+
+avatar.src="../assets/default-avatar.png";
+
+row.appendChild(avatar);
+
+}
+
+row.appendChild(bubble);
+
+chatMessages.appendChild(row);
+
+<div class="message-text">
+
+${message.text}
+
+</div>
+
+<div class="message-time">
+
+${new Date(message.createdAt).toLocaleTimeString([],{
+hour:"2-digit",
+minute:"2-digit"
+})}
+
+</div>
+
+`;
+
+chatMessages.appendChild(bubble);
 
             });
 
