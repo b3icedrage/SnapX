@@ -2378,3 +2378,74 @@ opacity:.35;
 }
 
 }
+
+.media-container{
+
+position:relative;
+
+overflow:hidden;
+
+border-radius:18px;
+
+}
+
+.heart-animation{
+
+position:absolute;
+
+left:50%;
+
+top:50%;
+
+transform:translate(-50%,-50%) scale(.2);
+
+font-size:90px;
+
+opacity:0;
+
+pointer-events:none;
+
+transition:.35s;
+
+text-shadow:0 0 30px rgba(255,0,80,.7);
+
+}
+
+.heart-animation.show{
+
+opacity:1;
+
+transform:translate(-50%,-50%) scale(1);
+
+animation:heartPop .7s forwards;
+
+}
+
+@keyframes heartPop{
+
+0%{
+
+opacity:0;
+
+transform:translate(-50%,-50%) scale(.2);
+
+}
+
+25%{
+
+opacity:1;
+
+transform:translate(-50%,-50%) scale(1.25);
+
+}
+
+100%{
+
+opacity:0;
+
+transform:translate(-50%,-50%) scale(1);
+
+}
+
+}
+

@@ -90,6 +90,35 @@ function loadMorePosts() {
 function renderPost(post) {
 
     const card = document.createElement("article");
+    const mediaElement =
+card.querySelector(".uploaded-media");
+
+const heart =
+card.querySelector(".heart-animation");
+
+let lastTap = 0;
+
+mediaElement.addEventListener("click",()=>{
+
+const now = Date.now();
+
+if(now-lastTap<300){
+
+heart.classList.add("show");
+
+setTimeout(()=>{
+
+heart.classList.remove("show");
+
+},700);
+
+toggleLike(post.id);
+
+}
+
+lastTap = now;
+
+});
 
     card.className = "post fade-in";
 
@@ -147,8 +176,17 @@ ${new Date(post.createdAt).toLocaleString()}
 
 </div>
 
+<div class="media-container">
+
 ${media}
 
+<div class="heart-animation">
+
+❤
+
+</div>
+
+</div>
 <div class="post-content">
 
 <p>${post.caption || ""}</p>
