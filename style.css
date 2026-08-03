@@ -63,6 +63,153 @@ body{
     overflow-x:hidden;
 
 }
+.verified-page{
+background:#f4f6fb;
+font-family:sans-serif;
+margin:0;
+padding-bottom:120px;
+}
+
+.verified-header{
+background:linear-gradient(135deg,#007bff,#6c63ff);
+color:white;
+padding:30px 20px;
+border-radius:0 0 30px 30px;
+text-align:center;
+}
+
+.back-btn{
+color:white;
+text-decoration:none;
+font-size:24px;
+float:left;
+}
+
+.plans{
+padding:15px;
+display:grid;
+gap:20px;
+}
+
+.plan{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+cursor:pointer;
+position:relative;
+transition:.3s;
+}
+
+.plan.active{
+border:3px solid #007bff;
+transform:scale(1.02);
+}
+
+.plan button{
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:14px;
+background:#007bff;
+color:white;
+font-size:16px;
+font-weight:bold;
+}
+
+.badge{
+position:absolute;
+top:15px;
+right:15px;
+background:#ff9800;
+color:white;
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+}
+
+.save{
+background:#28a745;
+}
+
+.payment-methods,
+.summary,
+.secure,
+.promo{
+margin:20px;
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.method{
+padding:15px;
+border:2px solid #ddd;
+border-radius:12px;
+margin-top:10px;
+cursor:pointer;
+}
+
+.method.selected{
+border-color:#007bff;
+background:#eef5ff;
+}
+
+.promo{
+display:flex;
+gap:10px;
+}
+
+.promo input{
+flex:1;
+padding:14px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.promo button{
+padding:14px 20px;
+background:#007bff;
+color:white;
+border:none;
+border-radius:10px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:12px 0;
+font-weight:bold;
+}
+
+.secure{
+text-align:center;
+color:#28a745;
+font-weight:bold;
+}
+
+.bottom-pay{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+padding:15px;
+background:white;
+box-shadow:0 -5px 20px rgba(0,0,0,.1);
+}
+
+.bottom-pay button{
+width:100%;
+padding:18px;
+font-size:18px;
+font-weight:bold;
+background:#007bff;
+color:white;
+border:none;
+border-radius:15px;
+}
 
 /* ---------- Links ---------- */
 

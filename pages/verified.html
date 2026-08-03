@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
-<title>Snap Verified</title>
+<title>Snap X Verified</title>
 
 <link rel="stylesheet" href="../style.css">
 
@@ -16,68 +13,195 @@ content="width=device-width,initial-scale=1.0">
 
 </head>
 
-<body>
+<body class="verified-page">
 
-<div class="verified-container">
+<div class="verified-header">
 
-<h1>✔ Snap Verified</h1>
+<a href="profile.html" class="back-btn">←</a>
+
+<h1>✔ Snap X Verified</h1>
 
 <p>
-Become a verified creator and unlock exclusive features.
+Get verified and unlock exclusive creator features.
 </p>
 
-<div class="plan">
+</div>
+
+<div class="plans">
+
+<div class="plan active" onclick="selectPlan(this,'3months',5)">
+
+<div class="badge">POPULAR</div>
 
 <h2>3 Months</h2>
 
 <h3>$5</h3>
 
-<button onclick="pay('3months',5)">
-Choose Plan
-</button>
+<ul>
+<li>✔ Verified Badge</li>
+<li>✔ Priority Support</li>
+<li>✔ Higher Upload Limits</li>
+<li>✔ Creator Insights</li>
+</ul>
+
+<button>Choose Plan</button>
 
 </div>
 
-<div class="plan">
+<div class="plan" onclick="selectPlan(this,'6months',9)">
 
 <h2>6 Months</h2>
 
 <h3>$9</h3>
 
-<button onclick="pay('6months',9)">
-Choose Plan
-</button>
+<ul>
+<li>✔ Verified Badge</li>
+<li>✔ Priority Support</li>
+<li>✔ Creator Insights</li>
+<li>✔ Early Features</li>
+</ul>
+
+<button>Choose Plan</button>
 
 </div>
 
-<div class="plan">
+<div class="plan" onclick="selectPlan(this,'9months',14)">
 
 <h2>9 Months</h2>
 
 <h3>$14</h3>
 
-<button onclick="pay('9months',14)">
-Choose Plan
-</button>
+<ul>
+<li>✔ Everything Included</li>
+<li>✔ Boosted Profile</li>
+<li>✔ HD Uploads</li>
+<li>✔ Creator Tools</li>
+</ul>
+
+<button>Choose Plan</button>
 
 </div>
 
-<div class="plan">
+<div class="plan" onclick="selectPlan(this,'1year',19)">
+
+<div class="badge save">BEST VALUE</div>
 
 <h2>1 Year</h2>
 
 <h3>$19</h3>
 
-<button onclick="pay('1year',19)">
-Choose Plan
+<ul>
+<li>✔ Everything Included</li>
+<li>✔ Highest Visibility</li>
+<li>✔ Premium Support</li>
+<li>✔ Save More</li>
+</ul>
+
+<button>Choose Plan</button>
+
+</div>
+
+</div>
+
+<div class="payment-methods">
+
+<h2>Payment Method</h2>
+
+<div class="method selected">
+💳 Card
+</div>
+
+<div class="method">
+📱 M-Pesa
+</div>
+
+<div class="method">
+🏦 Bank
+</div>
+
+</div>
+
+<div class="promo">
+
+<input
+type="text"
+placeholder="Promo Code">
+
+<button>Apply</button>
+
+</div>
+
+<div class="summary">
+
+<h2>Order Summary</h2>
+
+<div class="row">
+
+<span>Selected Plan</span>
+
+<span id="planName">
+3 Months
+</span>
+
+</div>
+
+<div class="row">
+
+<span>Total</span>
+
+<span id="planPrice">
+$5
+</span>
+
+</div>
+
+</div>
+
+<div class="secure">
+
+🔒 Secure payment powered by Paystack.
+
+</div>
+
+<div class="bottom-pay">
+
+<button id="payButton">
+Pay Securely
 </button>
 
 </div>
 
-</div>
+<script>
+
+let currentPlan="3months";
+let currentPrice=5;
+
+function selectPlan(card,plan,price){
+
+document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
+
+card.classList.add("active");
+
+currentPlan=plan;
+currentPrice=price;
+
+document.getElementById("planName").innerText=
+card.querySelector("h2").innerText;
+
+document.getElementById("planPrice").innerText=
+"$"+price;
+
+}
+
+document.getElementById("payButton").onclick=()=>{
+
+pay(currentPlan,currentPrice);
+
+};
+
+</script>
 
 <script type="module" src="../firebase/verified.js"></script>
 
 </body>
-
 </html>
