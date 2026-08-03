@@ -120,3 +120,34 @@ document
     alert("Profile updated successfully 🚀");
 
 });
+const settingsBtn =
+document.getElementById("settingsBtn");
+
+const panel =
+document.getElementById("settingsPanel");
+
+const overlay =
+document.getElementById("settingsOverlay");
+
+const close =
+document.getElementById("closeSettings");
+
+settingsBtn.onclick=()=>{
+
+panel.classList.add("open");
+
+overlay.classList.add("show");
+
+};
+
+close.onclick=closePanel;
+
+overlay.onclick=closePanel;
+
+function closePanel(){
+
+panel.classList.remove("open");
+
+overlay.classList.remove("show");
+
+}

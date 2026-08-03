@@ -24,6 +24,73 @@ href="../style.css">
 
 </div>
 </head>
+<div id="settingsPanel" class="settings-panel">
+
+    <div class="settings-header">
+
+        <h2>Settings</h2>
+
+        <button id="closeSettings">✕</button>
+
+    </div>
+
+    <a href="verified.html" class="verified-card">
+
+        <div class="verified-icon">
+            ✔
+        </div>
+
+        <div>
+
+            <h3>Snap Verified</h3>
+
+            <p>Get your blue badge</p>
+
+        </div>
+
+        <span>›</span>
+
+    </a>
+
+    <div class="setting-item">
+        🌙 Dark Mode
+    </div>
+
+    <div class="setting-item">
+        🔔 Notifications
+    </div>
+
+    <div class="setting-item">
+        🔒 Privacy
+    </div>
+
+    <div class="setting-item">
+        👥 Friends
+    </div>
+
+    <div class="setting-item">
+        💬 Messages
+    </div>
+
+    <div class="setting-item">
+        📥 Downloads
+    </div>
+
+    <div class="setting-item">
+        🗑 Clear Cache
+    </div>
+
+    <div class="setting-item">
+        📄 Terms of Service
+    </div>
+
+    <div class="setting-item logout">
+        🚪 Log Out
+    </div>
+
+</div>
+
+<div id="settingsOverlay" class="settings-overlay"></div>
 
 <body>
 
@@ -310,104 +377,7 @@ document
 
 <script src="../script/navigation.js"></script>
 
-<div id="settingsPanel" class="settings-panel">
-
-    <div class="settings-header">
-
-        <h2>Settings</h2>
-
-        <button id="closeSettings">✕</button>
-
-    </div>
-
-    <a href="verified.html" class="verified-card">
-
-        <div class="verified-icon">
-            ✔
-        </div>
-
-        <div>
-
-            <h3>Snap Verified</h3>
-
-            <p>Get your blue badge</p>
-
-        </div>
-
-        <span>›</span>
-
-    </a>
-
-    <div class="setting-item">
-        🌙 Dark Mode
-    </div>
-
-    <div class="setting-item">
-        🔔 Notifications
-    </div>
-
-    <div class="setting-item">
-        🔒 Privacy
-    </div>
-
-    <div class="setting-item">
-        👥 Friends
-    </div>
-
-    <div class="setting-item">
-        💬 Messages
-    </div>
-
-    <div class="setting-item">
-        📥 Downloads
-    </div>
-
-    <div class="setting-item">
-        🗑 Clear Cache
-    </div>
-
-    <div class="setting-item">
-        📄 Terms of Service
-    </div>
-
-    <div class="setting-item logout">
-        🚪 Log Out
-    </div>
-
-</div>
-
-<div id="settingsOverlay" class="settings-overlay"></div>
-
-...
-
 <script type="module" src="../firebase/profile.js"></script>
-
-<script>
-const settingsBtn =
-document.getElementById("settingsBtn");
-
-const panel =
-document.getElementById("settingsPanel");
-
-const overlay =
-document.getElementById("settingsOverlay");
-
-const close =
-document.getElementById("closeSettings");
-
-settingsBtn.onclick = () => {
-    panel.classList.add("open");
-    overlay.classList.add("show");
-};
-
-close.onclick = closePanel;
-overlay.onclick = closePanel;
-
-function closePanel() {
-    panel.classList.remove("open");
-    overlay.classList.remove("show");
-}
-</script>
 
 </body>
 </html>
