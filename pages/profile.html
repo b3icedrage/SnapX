@@ -14,10 +14,19 @@ content="width=device-width, initial-scale=1.0">
 <link
 rel="stylesheet"
 href="../style.css">
+<div class="profile-top">
 
+    <h2>My Profile</h2>
+
+    <button id="settingsBtn" class="settings-btn">
+        ⚙️
+    </button>
+
+</div>
 </head>
 
 <body>
+
 <nav class="bottom-nav">
 
 <a href="feed.html" class="nav-item active">
@@ -45,10 +54,20 @@ href="../style.css">
     <img src="../assets/icons/profile.svg" class="nav-icon">
     <span>Profile</span>
 </a>
+<a href="verified.html" class="verified-button">
 
-</nav>
-<a href="verified.html">
-✔ Get Verified
+    <span>✔</span>
+
+    <div>
+
+        <strong>Get Snap Verified</strong><br>
+
+        <small>Unlock exclusive features</small>
+
+    </div>
+
+    <span class="arrow">→</span>
+
 </a>
 <!-- ==========================
      AUTH GUARD
@@ -290,6 +309,108 @@ document
 </script>
 
 <script src="../script/navigation.js"></script>
+
+<div id="settingsPanel" class="settings-panel">
+
+    <div class="settings-header">
+
+        <h2>Settings</h2>
+
+        <button id="closeSettings">✕</button>
+
+    </div>
+
+    <a href="verified.html" class="verified-card">
+
+        <div class="verified-icon">
+            ✔
+        </div>
+
+        <div>
+
+            <h3>Snap Verified</h3>
+
+            <p>Get your blue badge</p>
+
+        </div>
+
+        <span>›</span>
+
+    </a>
+
+    <div class="setting-item">
+        🌙 Dark Mode
+    </div>
+
+    <div class="setting-item">
+        🔔 Notifications
+    </div>
+
+    <div class="setting-item">
+        🔒 Privacy
+    </div>
+
+    <div class="setting-item">
+        👥 Friends
+    </div>
+
+    <div class="setting-item">
+        💬 Messages
+    </div>
+
+    <div class="setting-item">
+        📥 Downloads
+    </div>
+
+    <div class="setting-item">
+        🗑 Clear Cache
+    </div>
+
+    <div class="setting-item">
+        📄 Terms of Service
+    </div>
+
+    <div class="setting-item logout">
+        🚪 Log Out
+    </div>
+
+</div>
+
+<div id="settingsOverlay" class="settings-overlay"></div>
+
+...
+
+<script type="module" src="../firebase/profile.js"></script>
+
+<script>
+const settingsBtn =
+document.getElementById("settingsBtn");
+
+const panel =
+document.getElementById("settingsPanel");
+
+const overlay =
+document.getElementById("settingsOverlay");
+
+const close =
+document.getElementById("closeSettings");
+
+settingsBtn.onclick = () => {
+    panel.classList.add("open");
+    overlay.classList.add("show");
+};
+
+close.onclick = closePanel;
+overlay.onclick = closePanel;
+
+function closePanel() {
+    panel.classList.remove("open");
+    overlay.classList.remove("show");
+}
+</script>
+
+</body>
+</html>
 </body>
 
 </html>
