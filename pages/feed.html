@@ -39,41 +39,47 @@ class="profile-icon">
 </a>
 
 </header>
-
 <!-- ==========================
-     STORIES
-=========================== -->
+     SNAP X STORIES
+========================== -->
 
-<div
-id="stories"
-class="stories-container">
+<section class="stories-section">
 
-<div class="story add-story">
+<div id="stories" class="stories">
 
-<div class="story-ring">
+    <!-- Your Story -->
 
-<img
-id="myStoryAvatar"
-src="../assets/default-avatar.png"
-class="story-avatar">
+    <div class="story-card add-story" id="myStory">
 
-<div class="add-story-badge">
+        <div class="story-ring own-story">
 
-+
+            <img
+            id="myStoryAvatar"
+            src="../assets/default-avatar.png"
+            class="story-avatar"
+            alt="Your Story">
+
+            <div class="story-plus">
+
+                +
+
+            </div>
+
+        </div>
+
+        <span>
+
+            Your Story
+
+        </span>
+
+    </div>
+
+    <!-- Stories from Firebase will be added here -->
 
 </div>
 
-</div>
-
-<span>
-
-Your Story
-
-</span>
-
-</div>
-
-</div>
+</section>
 <!-- ==========================
      FEED
 =========================== -->

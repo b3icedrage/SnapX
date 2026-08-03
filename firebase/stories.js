@@ -53,6 +53,7 @@ function loadStories(){
         id: doc.id,
 
         ...doc.data()
+};
 
             if(
                 auth.currentUser &&
@@ -84,7 +85,7 @@ function renderMyStory(){
 
     storiesContainer.innerHTML += `
 
-<div id="myStory" class="story add-story">
+<div id="myStory" class="story-card add-story">
 <div class="story-ring">
 
 <img
@@ -117,15 +118,23 @@ Your Story
 
 function renderStory(story){
 
-    const ringClass =
-    story.verified
-        ? "story-ring verified-story"
-        : "story-ring active-story";
+    let ringClass = "story-ring active-story";
 
+if(story.viewed){
+
+    ringClass = "story-ring viewed-story";
+
+}
+
+if(story.verified){
+
+    ringClass = "story-ring verified-story";
+
+}
     storiesContainer.innerHTML += `
 
 <div
-class="story"
+class="story-card"
 data-id="${story.id || ""}">
 
 <div class="${ringClass}">
@@ -193,7 +202,9 @@ document.addEventListener("click", (e) => {
 
                 type: file.type,
 
-                verified: false,
+                verified:
+auth.currentUser.photoURL?.includes("verified")
+|| false,
 
                 createdAt: Date.now()
 
