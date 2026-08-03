@@ -14,115 +14,11 @@ content="width=device-width, initial-scale=1.0">
 <link
 rel="stylesheet"
 href="../style.css">
-<div class="profile-top">
 
-    <h2>My Profile</h2>
-
-    <button id="settingsBtn" class="settings-btn">
-        ⚙️
-    </button>
-
-</div>
-
-<div id="settingsPanel" class="settings-panel">
-
-    <div class="settings-header">
-
-        <h2>Settings</h2>
-
-        <button id="closeSettings">✕</button>
-
-    </div>
-
-    <a href="verified.html" class="verified-card">
-
-        <div class="verified-icon">
-            ✔
-        </div>
-
-        <div>
-
-            <h3>Snap Verified</h3>
-
-            <p>Get your blue badge</p>
-
-        </div>
-
-        <span>›</span>
-
-    </a>
-
-    <div class="setting-item">
-        🌙 Dark Mode
-    </div>
-
-    <div class="setting-item">
-        🔔 Notifications
-    </div>
-
-    <div class="setting-item">
-        🔒 Privacy
-    </div>
-
-    <div class="setting-item">
-        👥 Friends
-    </div>
-
-    <div class="setting-item">
-        💬 Messages
-    </div>
-
-    <div class="setting-item">
-        📥 Downloads
-    </div>
-
-    <div class="setting-item">
-        🗑 Clear Cache
-    </div>
-
-    <div class="setting-item">
-        📄 Terms of Service
-    </div>
-
-    <div class="setting-item logout">
-        🚪 Log Out
-    </div>
-
-</div>
-
-<div id="settingsOverlay" class="settings-overlay"></div>
 </head>
 
-  
 <body>
 
-<nav class="bottom-nav">
-
-<a href="feed.html" class="nav-item active">
-    <img src="../assets/icons/home.svg" class="nav-icon">
-    <span>Home</span>
-</a>
-
-<a href="search.html" class="nav-item">
-    <img src="../assets/icons/search.svg" class="nav-icon">
-    <span>Search</span>
-</a>
-
-<a href="snaps.html" class="nav-item nav-center">
-    <div class="center-btn">
-        <img src="../assets/icons/snaps.svg" class="nav-icon">
-    </div>
-</a>
-
-<a href="notifications.html" class="nav-item">
-    <img src="../assets/icons/activity.svg" class="nav-icon">
-    <span>Activity</span>
-</a>
-
-<a href="profile.html" class="nav-item">
-    <img src="../assets/icons/profile.svg" class="nav-icon">
-    <span>Profile</span>
-</a>
 <!-- ==========================
      AUTH GUARD
 ========================== -->
@@ -153,6 +49,14 @@ Profile
 
 </h2>
 
+<button
+id="settingsBtn"
+class="settings-btn">
+
+⚙️
+
+</button>
+
 </header>
 
 <!-- ==========================
@@ -168,7 +72,8 @@ Profile
 <img
 id="photoPreview"
 class="avatar"
-src="../assets/default-avatar.png">
+src="../assets/default-avatar.png"
+alt="Profile Photo">
 
 <div class="profile-info">
 
@@ -184,11 +89,21 @@ Loading...
 
 </p>
 
+<div id="verifiedBadge"
+class="verified-badge"
+style="display:none;">
+
+✔ Snap Verified
+
+</div>
+
 </div>
 
 </div>
 
-<!-- Stats -->
+<!-- ==========================
+     PROFILE STATS
+========================== -->
 
 <div class="stats">
 
@@ -200,11 +115,7 @@ Loading...
 
 </h3>
 
-<span>
-
-Posts
-
-</span>
+<span>Posts</span>
 
 </div>
 
@@ -216,11 +127,7 @@ Posts
 
 </h3>
 
-<span>
-
-Followers
-
-</span>
+<span>Followers</span>
 
 </div>
 
@@ -232,19 +139,18 @@ Followers
 
 </h3>
 
-<span>
-
-Following
-
-</span>
+<span>Following</span>
 
 </div>
 
 </div>
 
-<!-- Edit Profile -->
+<!-- ==========================
+     EDIT PROFILE
+========================== -->
 
-<div class="glass round shadow"
+<div
+class="glass round shadow"
 style="padding:20px;margin-bottom:25px;">
 
 <h3
@@ -308,11 +214,11 @@ Logout
 </button>
 
 </div>
+<!-- ==========================
+     YOUR POSTS
+========================== -->
 
-<!-- User Posts -->
-
-<h2
-style="margin-bottom:15px;">
+<h2 style="margin-bottom:15px;">
 
 Your Posts
 
@@ -333,8 +239,193 @@ Loading your posts...
 </main>
 
 <!-- ==========================
-     SCRIPTS
+     BOTTOM NAVIGATION
 ========================== -->
+
+<nav class="bottom-nav">
+
+<a href="feed.html" class="nav-item">
+
+<img
+src="../assets/icons/home.svg"
+class="nav-icon">
+
+<span>Home</span>
+
+</a>
+
+<a href="search.html" class="nav-item">
+
+<img
+src="../assets/icons/search.svg"
+class="nav-icon">
+
+<span>Search</span>
+
+</a>
+
+<a href="snaps.html"
+class="nav-item nav-center">
+
+<div class="center-btn">
+
+<img
+src="../assets/icons/snaps.svg"
+class="nav-icon">
+
+</div>
+
+</a>
+
+<a href="notifications.html"
+class="nav-item">
+
+<img
+src="../assets/icons/activity.svg"
+class="nav-icon">
+
+<span>Activity</span>
+
+</a>
+
+<a href="profile.html"
+class="nav-item active">
+
+<img
+src="../assets/icons/profile.svg"
+class="nav-icon">
+
+<span>Profile</span>
+
+</a>
+
+</nav>
+
+<!-- ==========================
+     SETTINGS DRAWER
+========================== -->
+
+<div
+id="settingsOverlay"
+class="settings-overlay">
+
+</div>
+
+<div
+id="settingsPanel"
+class="settings-panel">
+
+<div class="settings-header">
+
+<h2>
+
+Settings
+
+</h2>
+
+<button id="closeSettings">
+
+✕
+
+</button>
+
+</div>
+
+<a
+href="verified.html"
+class="verified-card">
+
+<div class="verified-icon">
+
+✔
+
+</div>
+
+<div>
+
+<h3>
+
+Snap Verified
+
+</h3>
+
+<p>
+
+Get your blue badge
+
+</p>
+
+</div>
+
+<span>
+
+›
+
+</span>
+
+</a>
+
+<div class="setting-item">
+
+👤 Account
+
+</div>
+
+<div class="setting-item">
+
+🌙 Dark Mode
+
+</div>
+
+<div class="setting-item">
+
+🔔 Notifications
+
+</div>
+
+<div class="setting-item">
+
+🔒 Privacy
+
+</div>
+
+<div class="setting-item">
+
+💬 Messages
+
+</div>
+
+<div class="setting-item">
+
+📥 Downloads
+
+</div>
+
+<div class="setting-item">
+
+📄 Terms & Privacy
+
+</div>
+
+<div class="setting-item">
+
+❓ Help Center
+
+</div>
+
+<div
+class="setting-item logout"
+id="drawerLogout">
+
+🚪 Logout
+
+</div>
+
+</div>
+<!-- ==========================
+     FIREBASE SCRIPTS
+========================== -->
+
 <script
 type="module"
 src="../firebase/userPosts.js">
@@ -345,29 +436,102 @@ type="module"
 src="../firebase/profile.js">
 </script>
 
+<!-- ==========================
+     LOGOUT
+========================== -->
+
 <script type="module">
 
 import { logout } from "../firebase/logout.js";
 
-document
-.getElementById("logoutBtn")
-.onclick = async () => {
+const logoutBtn =
+document.getElementById("logoutBtn");
 
-    if (!confirm("Logout from Snap X?"))
-        return;
+const drawerLogout =
+document.getElementById("drawerLogout");
 
-    await logout();
+async function doLogout(){
 
-};
+const ok = confirm(
+"Logout from Snap X?"
+);
+
+if(!ok) return;
+
+await logout();
+
+}
+
+logoutBtn.onclick = doLogout;
+
+drawerLogout.onclick = doLogout;
 
 </script>
 
-<script src="../script/navigation.js"></script>
+<!-- ==========================
+     SETTINGS DRAWER
+========================== -->
 
-<script type="module" src="../firebase/profile.js"></script>
+<script>
 
-</body>
-</html>
+const settingsBtn =
+document.getElementById("settingsBtn");
+
+const panel =
+document.getElementById("settingsPanel");
+
+const overlay =
+document.getElementById("settingsOverlay");
+
+const closeBtn =
+document.getElementById("closeSettings");
+
+function openSettings(){
+
+panel.classList.add("open");
+
+overlay.classList.add("show");
+
+document.body.style.overflow="hidden";
+
+}
+
+function closeSettings(){
+
+panel.classList.remove("open");
+
+overlay.classList.remove("show");
+
+document.body.style.overflow="";
+
+}
+
+settingsBtn.onclick = openSettings;
+
+closeBtn.onclick = closeSettings;
+
+overlay.onclick = closeSettings;
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Escape"){
+
+closeSettings();
+
+}
+
+});
+
+</script>
+
+<!-- ==========================
+     NAVIGATION
+========================== -->
+
+<script
+src="../script/navigation.js">
+</script>
+
 </body>
 
 </html>
