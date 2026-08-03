@@ -1,42 +1,20 @@
-import { auth, database } from "./firebase.js";
-
-import {
-    ref,
-    update
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-/* ==========================================
-   Paystack Public Key
-========================================== */
+import { auth } from "./firebase.js";
 
 const PAYSTACK_PUBLIC_KEY = "pk_test_44b084de7dd0919ef364a3dbff381e3c4b9d164c";
 
-/* ==========================================
-   USD → KES Conversion
-   Update this whenever you change pricing.
-========================================== */
+const BACKEND =
+"https://snapx-backend-d195.onrender.com";
 
-const USD_TO_KES = 130;
-
-/* ==========================================
-   Open Paystack Payment
-========================================== */
-
-window.pay = function (plan, usdPrice) {
+window.pay = function(plan, price){
 
     const user = auth.currentUser;
 
-    if (!user) {
-        alert("Please log in first.");
-        return;
-    }
+    if(!user){
 
-    if (!user.email) {
-        alert("Your account must have an email address.");
+        alert("Please login first.");
         return;
-    }
 
-    const amountInKes = Math.round(usdPrice * USD_TO_KES);
+    }
 
     const handler = PaystackPop.setup({
 
@@ -44,36 +22,76 @@ window.pay = function (plan, usdPrice) {
 
         email: user.email,
 
-        amount: amountInKes * 100,
+        amount: price * 100,
 
-        currency: "KES",
+        currency: "USD",
 
-        metadata: {
+        metadata:{
 
             uid: user.uid,
 
-            username: user.displayName || "",
-
-            plan: plan,
-
-            usdPrice: usdPrice,
-
-            amountKES: amountInKes
+            plan: plan
 
         },
 
-        callback: function (response) {
+        callback: async function(response){
 
-            console.log("Payment Reference:", response.reference);
+            try{
 
-            saveVerified(
-                plan,
-                response.reference
-            );
+                const verify =
+                await fetch(
+
+                    `${BACKEND}/verify-payment`,
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+
+                        body:JSON.stringify({
+
+                            reference:response.reference,
+
+                            uid:user.uid,
+
+                            plan:plan
+
+                        })
+
+                    }
+
+                );
+
+                const result =
+                await verify.json();
+
+                if(result.success){
+
+                    alert("🎉 Welcome to Snap Verified!");
+
+                    window.location.href =
+                    "profile.html";
+
+                }else{
+
+                    alert(result.message);
+
+                }
+
+            }catch(err){
+
+                console.error(err);
+
+                alert("Unable to verify payment.");
+
+            }
 
         },
 
-        onClose: function () {
+        onClose(){
 
             alert("Payment cancelled.");
 
@@ -84,84 +102,3 @@ window.pay = function (plan, usdPrice) {
     handler.openIframe();
 
 };
-
-/* ==========================================
-   Save Verification
-========================================== */
-
-function saveVerified(plan, paymentReference) {
-
-    const user = auth.currentUser;
-
-    if (!user) return;
-
-    const now = Date.now();
-
-    let months = 3;
-
-    switch (plan) {
-
-        case "6months":
-            months = 6;
-            break;
-
-        case "9months":
-            months = 9;
-            break;
-
-        case "1year":
-            months = 12;
-            break;
-
-    }
-
-    const verifiedUntil =
-        now +
-        (
-            months *
-            30 *
-            24 *
-            60 *
-            60 *
-            1000
-        );
-
-    update(
-
-        ref(database, "users/" + user.uid),
-
-        {
-
-            verified: true,
-
-            verifiedPlan: plan,
-
-            verifiedSince: now,
-
-            verifiedUntil: verifiedUntil,
-
-            paymentReference: paymentReference,
-
-            verifiedBadge: true
-
-        }
-
-    )
-
-    .then(() => {
-
-        alert("🎉 Congratulations!");
-
-        alert("Your Snap Verified badge is now active.");
-
-    })
-
-    .catch(error => {
-
-        console.error(error);
-
-        alert("Unable to activate verification.");
-
-    });
-
-}
