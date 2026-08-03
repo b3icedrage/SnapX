@@ -1,40 +1,29 @@
 import { db } from "./firebase.js";
 
 import {
-doc,
-getDoc
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const params =
-new URLSearchParams(location.search);
+const params = new URLSearchParams(window.location.search);
 
-const id =
-params.get("id");
+const id = params.get("id");
 
-const image =
-document.getElementById("storyImage");
+const image = document.getElementById("storyImage");
+const video = document.getElementById("storyVideo");
 
-const video =
-document.getElementById("storyVideo");
+const avatar = document.getElementById("storyAvatar");
+const username = document.getElementById("storyUsername");
+const storyTime = document.getElementById("storyTime");
+const progress = document.getElementById("storyProgress");
 
-const user =
-document.getElementById("storyUser");
+const close = document.getElementById("closeStory");
 
-const close =
-document.getElementById("closeStory");
+async function loadStory() {
 
-async function loadStory(){
+    if (!id) {
 
-    const snap =
-    await getDoc(
-        doc(db,"stories",id)
-    );
-
-    if(!snap.exists()){
-
-        alert("Story not found");
+        alert("Invalid story.");
 
         history.back();
 
@@ -42,35 +31,103 @@ async function loadStory(){
 
     }
 
-    const story =
-    snap.data();
+    try {
 
-    user.textContent =
-    story.username;
+        const snap = await getDoc(doc(db, "stories", id));
 
-    if(story.type.startsWith("video")){
+        if (!snap.exists()) {
 
-        video.src =
-        story.media;
+            alert("Story not found");
 
-        video.style.display="block";
+            history.back();
+
+            return;
+
+        }
+
+        const story = snap.data();
+
+        avatar.src =
+            story.photo ||
+            "../assets/default-avatar.png";
+
+        username.textContent =
+            story.username || "Snap X User";
+
+        if (story.createdAt) {
+
+            storyTime.textContent =
+                new Date(story.createdAt).toLocaleString();
+
+        } else {
+
+            storyTime.textContent = "Just now";
+
+        }
+
+        progress.innerHTML = `
+            <div class="story-bar">
+                <div class="story-fill" id="storyFill"></div>
+            </div>
+        `;
+
+        requestAnimationFrame(() => {
+
+            const fill =
+                document.getElementById("storyFill");
+
+            if (fill) {
+
+                fill.style.transition = "width 5s linear";
+
+                fill.style.width = "100%";
+
+            }
+
+        });
+
+        if (
+            story.type &&
+            story.type.startsWith("video")
+        ) {
+
+            image.hidden = true;
+
+            video.hidden = false;
+
+            video.src = story.media;
+
+            video.load();
+
+            video.play().catch(() => {});
+
+        } else {
+
+            video.pause();
+
+            video.hidden = true;
+
+            image.hidden = false;
+
+            image.src = story.media;
+
+        }
 
     }
 
-    else{
+    catch (err) {
 
-        image.src =
-        story.media;
+        console.error(err);
 
-        image.style.display="block";
+        alert("Failed to load story.");
 
     }
 
 }
 
-close.onclick=()=>{
+close.onclick = () => {
 
-history.back();
+    history.back();
 
 };
 

@@ -5,39 +5,99 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0">
 
-<title>Story</title>
+<title>Snap X Story</title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="../style.css">
 
 </head>
 
 <body>
 
-<div id="storyViewer">
+<div id="storyViewer" class="story-viewer">
 
-<img
-id="storyImage"
-style="display:none;">
+    <!-- Progress Bars -->
 
-<video
-id="storyVideo"
-style="display:none;"
-autoplay
-playsinline
-controls>
-</video>
+    <div id="storyProgress"
+         class="story-progress">
+    </div>
 
-<div id="storyUser"></div>
+    <!-- Top Overlay -->
 
-<button id="closeStory">
+    <div class="story-top">
 
-✕
+        <div class="story-user">
 
-</button>
+            <img
+            id="storyAvatar"
+            class="story-user-avatar"
+            src="../assets/default-avatar.png"
+            alt="Avatar">
+
+            <div>
+
+                <div id="storyUsername"
+                     class="story-username">
+
+                    Loading...
+
+                </div>
+
+                <div id="storyTime"
+                     class="story-time">
+
+                    Just now
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button id="closeStory"
+                class="story-close">
+
+            ✕
+
+        </button>
+
+    </div>
+
+    <!-- Story Media -->
+
+    <div class="story-media">
+
+        <img
+        id="storyImage"
+        class="story-image"
+        hidden>
+
+        <video
+        id="storyVideo"
+        class="story-video"
+        hidden
+        playsinline
+        autoplay>
+        </video>
+
+    </div>
+
+    <!-- Navigation -->
+
+    <div
+    id="prevStory"
+    class="story-side left">
+    </div>
+
+    <div
+    id="nextStory"
+    class="story-side right">
+    </div>
 
 </div>
 
