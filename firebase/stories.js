@@ -1,230 +1,130 @@
-import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+const viewer = document.getElementById("storyViewer");
+const image = document.getElementById("storyImage");
+const video = document.getElementById("storyVideo");
+const close = document.getElementById("closeStory");
+const progress = document.getElementById("storyProgress");
 
-import {
-    addDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { db, auth } from "./firebase.js";
 
-import {
-    collection,
-    query,
-    orderBy,
-    onSnapshot,
-    where
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+let stories = [];
+let current = 0;
+let timer;
 
-const storiesContainer =
-document.getElementById("stories");
 
-const DAY =
-24 * 60 * 60 * 1000;
+export function openStory(index){
 
-/* ==========================
-   Load Stories
-========================== */
+    current=index;
 
-function loadStories(){
+    viewer.classList.remove("hidden");
 
-    const yesterday =
-    Date.now() - DAY;
+    showStory();
 
-    const q =
-    query(
-        collection(db,"stories"),
-        where("createdAt",">",yesterday),
-        orderBy("createdAt","desc")
-    );
+}
 
-    onSnapshot(q,(snapshot)=>{
 
-        storiesContainer.innerHTML="";
 
-        renderMyStory();
+function showStory(){
 
-        snapshot.forEach((doc)=>{
+    clearTimeout(timer);
 
-    const story = {
+    let story = stories[current];
 
-        id: doc.id,
 
-        ...doc.data()
+    image.style.display="none";
+    video.style.display="none";
+
+
+    progress.style.transition="none";
+    progress.style.transform="scaleX(0)";
+
+
+    if(story.type==="video"){
+
+        video.src=story.url;
+        video.style.display="block";
+
+        video.play();
+
+        timer=setTimeout(nextStory,15000);
+
+    }else{
+
+        image.src=story.url;
+        image.style.display="block";
+
+        timer=setTimeout(nextStory,5000);
+    }
+
+
+    setTimeout(()=>{
+
+        progress.style.transition="transform 5s linear";
+        progress.style.transform="scaleX(1)";
+
+    },50);
+
+}
+
+
+
+function nextStory(){
+
+    current++;
+
+    if(current >= stories.length){
+
+        closeStory();
+
+    }else{
+
+        showStory();
+
+    }
+
+}
+
+
+
+function previousStory(){
+
+    if(current>0){
+
+        current--;
+        showStory();
+
+    }
+
+}
+
+
+
+function closeStory(){
+
+    clearTimeout(timer);
+
+    video.pause();
+    video.src="";
+
+    viewer.classList.add("hidden");
+
+}
+
+
+
+viewer.onclick=(e)=>{
+
+    let x=e.clientX;
+
+    if(x > window.innerWidth/2){
+
+        nextStory();
+
+    }else{
+
+        previousStory();
+
+    }
+
 };
 
-            if(
-                auth.currentUser &&
-                story.uid === auth.currentUser.uid
-            ){
-                return;
-            }
 
-            renderStory(story);
-
-        });
-
-    });
-
-}
-
-/* ==========================
-   Your Story
-========================== */
-
-function renderMyStory(){
-
-    const me =
-    auth.currentUser;
-
-    const avatar =
-    me?.photoURL ||
-    "../assets/default-avatar.png";
-
-    storiesContainer.innerHTML += `
-
-<div id="myStory" class="story-card add-story">
-<div class="story-ring">
-
-<img
-src="${avatar}"
-class="story-avatar">
-
-<div class="add-story-badge">
-
-+
-
-</div>
-
-</div>
-
-<span>
-
-Your Story
-
-</span>
-
-</div>
-
-`;
-
-}
-
-/* ==========================
-   Story Card
-========================== */
-
-function renderStory(story){
-
-    let ringClass = "story-ring active-story";
-
-if(story.viewed){
-
-    ringClass = "story-ring viewed-story";
-
-}
-
-if(story.verified){
-
-    ringClass = "story-ring verified-story";
-
-}
-    storiesContainer.innerHTML += `
-
-<div
-class="story-card"
-data-id="${story.id || ""}">
-
-<div class="${ringClass}">
-
-<img
-src="${story.photo || "../assets/default-avatar.png"}"
-class="story-avatar">
-
-</div>
-
-<span>
-
-${story.username || "User"}
-
-</span>
-
-</div>
-
-`;
-
-}
-const storage = getStorage();
-
-document.addEventListener("click", (e) => {
-
-    const myStory = e.target.closest("#myStory");
-
-    if (!myStory) return;
-
-    const picker = document.createElement("input");
-
-    picker.type = "file";
-
-    picker.accept = "image/*,video/*";
-
-    picker.onchange = async () => {
-
-        const file = picker.files[0];
-
-        if (!file) return;
-
-        try {
-
-            const fileRef = storageRef(
-                storage,
-                "stories/" + Date.now() + "_" + file.name
-            );
-
-            await uploadBytes(fileRef, file);
-
-            const url = await getDownloadURL(fileRef);
-
-            await addDoc(collection(db, "stories"), {
-
-                uid: auth.currentUser.uid,
-
-                username:
-                    auth.currentUser.displayName || "User",
-
-                photo:
-                    auth.currentUser.photoURL ||
-                    "../assets/default-avatar.png",
-
-                media: url,
-
-                type: file.type,
-
-                verified:
-auth.currentUser.photoURL?.includes("verified")
-|| false,
-
-                createdAt: Date.now()
-
-            });
-
-            alert("✅ Story uploaded!");
-
-        } catch (err) {
-
-            console.error(err);
-
-            alert("Failed to upload story.");
-
-        }
-
-    };
-
-    picker.click();
-
-});
-
-loadStories();
-
+close.onclick=closeStory;
