@@ -137,6 +137,21 @@ z-index:9999;
 transition:.5s;
 
 }
+.story-viewer{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+z-index:9999;
+display:flex;
+flex-direction:column;
+}
+
+.hidden{
+display:none;
+}
 
 .story-viewer {
     position: fixed;
